@@ -33,14 +33,14 @@
                             <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
                             <input type="text" id="nom" name="nom"
                                    class="form-control ${not empty erreurs['nom'] ? 'is-invalid' : ''}"
-                                   value="${not empty valeurs['nom'] ? valeurs['nom'] : userEdit.nom}" required>
+                                   value="${not empty valeurs['nom'] ? fn:escapeXml(valeurs['nom']) : userEdit.nom}" required>
                             <div class="invalid-feedback">${erreurs['nom']}</div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
                             <input type="text" id="prenom" name="prenom"
                                    class="form-control ${not empty erreurs['prenom'] ? 'is-invalid' : ''}"
-                                   value="${not empty valeurs['prenom'] ? valeurs['prenom'] : userEdit.prenom}" required>
+                                   value="${not empty valeurs['prenom'] ? fn:escapeXml(valeurs['prenom']) : userEdit.prenom}" required>
                             <div class="invalid-feedback">${erreurs['prenom']}</div>
                         </div>
                     </div>

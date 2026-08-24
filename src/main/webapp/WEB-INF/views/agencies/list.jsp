@@ -23,9 +23,9 @@
         <tbody>
         <c:forEach var="agence" items="${agences}">
             <tr>
-                <td><span class="badge bg-dark">${agence.code}</span></td>
-                <td class="fw-semibold">${agence.nom}</td>
-                <td>${agence.ville}</td>
+                <td><span class="badge bg-dark">${fn:escapeXml(agence.code)}</span></td>
+                <td class="fw-semibold">${fn:escapeXml(agence.nom)}</td>
+                <td>${fn:escapeXml(agence.ville)}</td>
                 <td>${agence.accounts.size()}</td>
                 <td class="text-end text-nowrap">
                     <a class="btn btn-sm btn-outline-secondary me-1"

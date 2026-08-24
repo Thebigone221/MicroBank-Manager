@@ -26,7 +26,7 @@
                             <c:forEach var="client" items="${clients}">
                                 <option value="${client.id}"
                                         ${valeurs['clientId'] eq String.valueOf(client.id) or clientIdSelectionne eq String.valueOf(client.id) ? 'selected' : ''}>
-                                        ${client.nomComplet} (${client.numeroPiece})
+                                        ${fn:escapeXml(client.nomComplet)} (${fn:escapeXml(client.numeroPiece)})
                                 </option>
                             </c:forEach>
                         </select>
@@ -61,7 +61,7 @@
                                 <option value="">- Aucune -</option>
                                 <c:forEach var="agence" items="${agences}">
                                     <option value="${agence.id}" ${valeurs['agenceId'] eq String.valueOf(agence.id) ? 'selected' : ''}>
-                                            ${agence.code} - ${agence.nom}
+                                            ${fn:escapeXml(agence.code)} - ${fn:escapeXml(agence.nom)}
                                     </option>
                                 </c:forEach>
                             </select>

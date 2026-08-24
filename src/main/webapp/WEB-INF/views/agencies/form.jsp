@@ -39,7 +39,7 @@
                         <label for="nom" class="form-label">Nom de l'agence <span class="text-danger">*</span></label>
                         <input type="text" id="nom" name="nom"
                                class="form-control ${not empty erreurs['nom'] ? 'is-invalid' : ''}"
-                               value="${not empty valeurs['nom'] ? valeurs['nom'] : agenceEdit.nom}" required
+                               value="${not empty valeurs['nom'] ? fn:escapeXml(valeurs['nom']) : agenceEdit.nom}" required
                                placeholder="Ex : Agence Plateau">
                         <div class="invalid-feedback">${erreurs['nom']}</div>
                     </div>

@@ -12,7 +12,7 @@
                 <h1 class="h5 mb-0">
                     <i class="bi bi-person-${modeEdition ? 'pencil' : 'plus'} me-2"></i>
                         ${modeEdition ? "Modifier le client " : "Nouveau client "}
-                    <c:if test="${modeEdition}">${client.nomComplet}</c:if>
+                    <c:if test="${modeEdition}">${fn:escapeXml(client.nomComplet)}</c:if>
                 </h1>
             </div>
             <div class="card-body">
@@ -33,7 +33,7 @@
                             <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
                             <input type="text" id="nom" name="nom"
                                    class="form-control ${not empty erreurs['nom'] ? 'is-invalid' : ''}"
-                                   value="${not empty valeurs['nom'] ? valeurs['nom'] : client.nom}" required
+                                   value="${not empty valeurs['nom'] ? fn:escapeXml(valeurs['nom']) : fn:escapeXml(client.nom)}" required
                                    placeholder="Ex : GAYE">
                             <div class="invalid-feedback">${erreurs['nom']}</div>
                         </div>
@@ -41,7 +41,7 @@
                             <label for="prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
                             <input type="text" id="prenom" name="prenom"
                                    class="form-control ${not empty erreurs['prenom'] ? 'is-invalid' : ''}"
-                                   value="${not empty valeurs['prenom'] ? valeurs['prenom'] : client.prenom}" required
+                                   value="${not empty valeurs['prenom'] ? fn:escapeXml(valeurs['prenom']) : fn:escapeXml(client.prenom)}" required
                                    placeholder="Ex : Abdoulaye">
                             <div class="invalid-feedback">${erreurs['prenom']}</div>
                         </div>
@@ -52,14 +52,14 @@
                             <label for="dateNaissance" class="form-label">Date de naissance</label>
                             <input type="date" id="dateNaissance" name="dateNaissance"
                                    class="form-control ${not empty erreurs['dateNaissance'] ? 'is-invalid' : ''}"
-                                   value="${not empty valeurs['dateNaissance'] ? valeurs['dateNaissance'] : (client.dateNaissance != null ? f:dateFr(client.dateNaissance) : '')}">
+                                   value="${not empty valeurs['dateNaissance'] ? fn:escapeXml(valeurs['dateNaissance']) : (client.dateNaissance != null ? f:dateFr(client.dateNaissance) : '')}">
                             <div class="invalid-feedback">${erreurs['dateNaissance']}</div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="telephone" class="form-label">Téléphone <span class="text-danger">*</span></label>
                             <input type="tel" id="telephone" name="telephone"
                                    class="form-control ${not empty erreurs['telephone'] ? 'is-invalid' : ''}"
-                                   value="${not empty valeurs['telephone'] ? valeurs['telephone'] : client.telephone}" required
+                                   value="${not empty valeurs['telephone'] ? fn:escapeXml(valeurs['telephone']) : fn:escapeXml(client.telephone)}" required
                                    placeholder="77 123 45 67">
                             <div class="invalid-feedback">${erreurs['telephone']}</div>
                         </div>
@@ -69,7 +69,7 @@
                         <label for="email" class="form-label">Email</label>
                         <input type="email" id="email" name="email"
                                class="form-control ${not empty erreurs['email'] ? 'is-invalid' : ''}"
-                               value="${not empty valeurs['email'] ? valeurs['email'] : client.email}"
+                               value="${not empty valeurs['email'] ? fn:escapeXml(valeurs['email']) : fn:escapeXml(client.email)}"
                                placeholder="exemple@mail.com">
                         <div class="invalid-feedback">${erreurs['email']}</div>
                     </div>
@@ -77,7 +77,7 @@
                     <div class="mb-3">
                         <label for="adresse" class="form-label">Adresse</label>
                         <textarea id="adresse" name="adresse" class="form-control" rows="2"
-                                  placeholder="Quartier, rue, ville...">${not empty valeurs['adresse'] ? valeurs['adresse'] : client.adresse}</textarea>
+                                  placeholder="Quartier, rue, ville...">${not empty valeurs['adresse'] ? fn:escapeXml(valeurs['adresse']) : fn:escapeXml(client.adresse)}</textarea>
                     </div>
 
                     <div class="mb-4">
@@ -85,7 +85,7 @@
                                 class="text-danger">*</span></label>
                         <input type="text" id="numeroPiece" name="numeroPiece"
                                class="form-control ${not empty erreurs['numeroPiece'] ? 'is-invalid' : ''}"
-                               value="${not empty valeurs['numeroPiece'] ? valeurs['numeroPiece'] : client.numeroPiece}" required
+                               value="${not empty valeurs['numeroPiece'] ? fn:escapeXml(valeurs['numeroPiece']) : fn:escapeXml(client.numeroPiece)}" required
                                placeholder="CNI ou passeport">
                         <div class="invalid-feedback">${erreurs['numeroPiece']}</div>
                     </div>

@@ -72,10 +72,19 @@ a:hover { color: var(--vert-profond); }
     font-size: 1.02rem;
 }
 .marque {
-    width: 13px;
-    height: 13px;
+    width: 26px;
+    height: 26px;
     background: var(--or);
-    display: inline-block;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: .55rem;
+}
+.marque .bi {
+    color: var(--vert-profond);
+    font-size: 15px;
+    line-height: 1;
 }
 .navbar-microbank .nav-link {
     color: rgba(246, 244, 236, .82);

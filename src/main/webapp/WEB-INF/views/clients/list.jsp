@@ -48,11 +48,11 @@
             <c:forEach var="client" items="${resultat.items}" varStatus="boucle">
                 <tr>
                     <td>C${client.id < 100 ? (client.id < 10 ? '00' : '0') : ''}${client.id}</td>
-                    <td class="fw-semibold">${client.nom}</td>
-                    <td>${client.prenom}</td>
-                    <td>${client.telephone}</td>
-                    <td>${client.email}</td>
-                    <td>${client.numeroPiece}</td>
+                    <td class="fw-semibold">${fn:escapeXml(client.nom)}</td>
+                    <td>${fn:escapeXml(client.prenom)}</td>
+                    <td>${fn:escapeXml(client.telephone)}</td>
+                    <td>${fn:escapeXml(client.email)}</td>
+                    <td>${fn:escapeXml(client.numeroPiece)}</td>
                     <td>
                         <span class="badge ${client.statut == 'ACTIF' ? 'bg-success' : 'bg-danger'}">${client.statut}</span>
                     </td>

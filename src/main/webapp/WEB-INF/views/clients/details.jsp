@@ -5,7 +5,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h4 mb-0">
-        <i class="bi bi-person-vcard me-2"></i>${client.nomComplet}
+        <i class="bi bi-person-vcard me-2"></i>${fn:escapeXml(client.nomComplet)}
         <span class="badge ${client.statut == 'ACTIF' ? 'bg-success' : 'bg-danger'} ms-2">${client.statut}</span>
     </h1>
     <div>
@@ -29,22 +29,22 @@
                     <span class="text-muted">Identifiant</span><strong>C${client.id}</strong>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="text-muted">Nom / Prénom</span><strong>${client.nom} ${client.prenom}</strong>
+                    <span class="text-muted">Nom / Prénom</span><strong>${fn:escapeXml(client.nom)} ${fn:escapeXml(client.prenom)}</strong>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Date de naissance</span>${f:dateFr(client.dateNaissance)}
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="text-muted">Téléphone</span><strong>${client.telephone}</strong>
+                    <span class="text-muted">Téléphone</span><strong>${fn:escapeXml(client.telephone)}</strong>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="text-muted">Email</span>${client.email}
+                    <span class="text-muted">Email</span>${fn:escapeXml(client.email)}
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="text-muted">Adresse</span>${client.adresse}
+                    <span class="text-muted">Adresse</span>${fn:escapeXml(client.adresse)}
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="text-muted">N° de pièce</span><strong>${client.numeroPiece}</strong>
+                    <span class="text-muted">N° de pièce</span><strong>${fn:escapeXml(client.numeroPiece)}</strong>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Créé le</span>${f:dateHeureFr(client.dateCreation)}

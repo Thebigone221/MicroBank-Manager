@@ -89,6 +89,9 @@ public class OperationServlet extends HttpServlet {
         Map<String, String> erreurs = ValidationUtil.nouvellesErreurs();
         BigDecimal montant = ValidationUtil.montantPositif(erreurs, "montant",
                 request.getParameter("montant"));
+        if (accountId == null) {
+            erreurs.put("montant", "Compte introuvable.");
+        }
 
         if (!erreurs.isEmpty()) {
             renvoyerFormulaire(request, response, accountId, erreurs,
@@ -114,6 +117,9 @@ public class OperationServlet extends HttpServlet {
         Map<String, String> erreurs = ValidationUtil.nouvellesErreurs();
         BigDecimal montant = ValidationUtil.montantPositif(erreurs, "montant",
                 request.getParameter("montant"));
+        if (accountId == null) {
+            erreurs.put("montant", "Compte introuvable.");
+        }
 
         if (!erreurs.isEmpty()) {
             renvoyerFormulaire(request, response, accountId, erreurs,

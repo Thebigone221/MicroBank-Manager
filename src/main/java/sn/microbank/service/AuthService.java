@@ -19,9 +19,12 @@ public class AuthService {
         Optional<User> trouve = userDAO.findByLogin(login);
         User user = trouve.orElseThrow(() -> new ServiceException("Login ou mot de passe incorrect."));
 
-        String hashSaisi = HashUtil.sha256(motDePasse);
-        if (!hashSaisi.equals(user.getMotDePasse())) {
+        if (!HashUtil.verifier(motDePasse, user.getMotDePasse())) {
             throw new ServiceException("Login ou mot de passe incorrect.");
+        }
+        if (HashUtil.estAncienFormat(user.getMotDePasse())) {
+            user.setMotDePasse(HashUtil.hasher(motDePasse));
+            userDAO.update(user);
         }
         if (user.getStatut() != Statut.ACTIF) {
             throw new ServiceException("Ce compte est désactivé. Contactez l'administrateur.");

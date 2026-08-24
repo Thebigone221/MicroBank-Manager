@@ -39,7 +39,7 @@
                         <option value="">Toutes agences</option>
                         <c:forEach var="agence" items="${agences}">
                             <option value="${agence.id}" ${agenceFiltre eq String.valueOf(agence.id) ? 'selected' : ''}>
-                                    ${agence.nom}
+                                    ${fn:escapeXml(agence.nom)}
                             </option>
                         </c:forEach>
                     </select>
@@ -68,7 +68,7 @@
             <c:forEach var="compte" items="${resultat.items}">
                 <tr>
                     <td class="fw-semibold">${compte.numeroCompte}</td>
-                    <td>${compte.client.nomComplet}</td>
+                    <td>${fn:escapeXml(compte.client.nomComplet)}</td>
                     <td><span class="badge ${compte.type == 'COURANT' ? 'badge-courant' : 'badge-epargne'}">${compte.type}</span></td>
                     <td class="fw-semibold">${f:fcfa(compte.solde)}</td>
                     <td>${compte.agency.nom}</td>

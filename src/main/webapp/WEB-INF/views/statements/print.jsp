@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="f" uri="http://microbank.sn/functions" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,7 +30,7 @@
 
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <p class="mb-1"><strong>Client :</strong> ${releve.compte.client.nomComplet}</p>
+                    <p class="mb-1"><strong>Client :</strong> ${fn:escapeXml(releve.compte.client.nomComplet)}</p>
                     <p class="mb-1"><strong>Compte :</strong> ${releve.compte.numeroCompte}</p>
                     <p class="mb-1"><strong>Type :</strong>
                         ${releve.compte.type == 'COURANT' ? "Compte courant" : "Compte épargne"}</p>
@@ -58,7 +59,7 @@
                         <td class="text-nowrap">${f:dateHeureFr(op.dateOperation)}</td>
                         <td>${op.reference}</td>
                         <td>${op.type}</td>
-                        <td>${op.description}</td>
+                        <td>${fn:escapeXml(op.description)}</td>
                         <td class="text-end ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? 'montant-moins' : 'montant-plus'}">
                                 ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? '-' : '+'}${f:nombre(op.montant)}
                         </td>

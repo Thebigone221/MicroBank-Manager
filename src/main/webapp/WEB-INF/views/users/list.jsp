@@ -45,8 +45,8 @@
             <tbody>
             <c:forEach var="utilisateur" items="${resultat.items}">
                 <tr class="${utilisateur.statut == 'INACTIF' ? 'table-light text-muted' : ''}">
-                    <td>${utilisateur.nomComplet}</td>
-                    <td><strong>${utilisateur.login}</strong></td>
+                    <td>${fn:escapeXml(utilisateur.nomComplet)}</td>
+                    <td><strong>${fn:escapeXml(utilisateur.login)}</strong></td>
                     <td>
                         <span class="badge ${utilisateur.role == 'ADMIN' ? 'bg-dark' : 'bg-secondary'}">${utilisateur.role}</span>
                     </td>

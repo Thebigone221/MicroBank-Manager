@@ -21,7 +21,7 @@ public class User {
     @Column(nullable = false, length = 40)
     private String login;
 
-    @Column(name = "mot_de_passe", nullable = false, length = 64)
+    @Column(name = "mot_de_passe", nullable = false, length = 255)
     private String motDePasse;
 
     @Enumerated(EnumType.STRING)

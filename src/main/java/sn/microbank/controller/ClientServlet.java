@@ -196,10 +196,9 @@ public class ClientServlet extends HttpServlet {
             if (id == null || part == null || part.getSize() == 0) {
                 throw new ServiceException("Veuillez sélectionner un fichier (PDF ou image, 5 Mo max).");
             }
-            String typeMime = part.getContentType() == null ? "" : part.getContentType();
-            boolean accepte = typeMime.startsWith("image/") || typeMime.equals("application/pdf");
-            if (!accepte) {
-                throw new ServiceException("Format non supporté : seuls les images et PDF sont acceptés.");
+            String extension = detecterExtension(part);
+            if (extension == null) {
+                throw new ServiceException("Format non supporté : seuls PDF, JPEG et PNG sont acceptés.");
             }
 
             Client client = clientService.findById(id);
@@ -208,7 +207,6 @@ public class ClientServlet extends HttpServlet {
             }
 
             Files.createDirectories(REPERTOIRE_UPLOADS);
-            String extension = typeMime.startsWith("image/") ? "png" : "pdf";
             String nomFichier = "client-" + id + "-piece." + extension;
             Path destination = REPERTOIRE_UPLOADS.resolve(nomFichier);
             part.write(destination.toString());
@@ -221,6 +219,26 @@ public class ClientServlet extends HttpServlet {
             Flash.error(session, e.getMessage());
         }
         response.sendRedirect(request.getContextPath() + "/clients/details?id=" + id);
+    }
+
+    private String detecterExtension(Part part) throws IOException {
+        byte[] entete = new byte[8];
+        try (java.io.InputStream entree = part.getInputStream()) {
+            int lus = entree.read(entete);
+            if (lus < 4) {
+                return null;
+            }
+        }
+        if (entete[0] == '%' && entete[1] == 'P' && entete[2] == 'D' && entete[3] == 'F') {
+            return "pdf";
+        }
+        if ((entete[0] & 0xFF) == 0x89 && entete[1] == 'P' && entete[2] == 'N' && entete[3] == 'G') {
+            return "png";
+        }
+        if ((entete[0] & 0xFF) == 0xFF && (entete[1] & 0xFF) == 0xD8 && (entete[2] & 0xFF) == 0xFF) {
+            return "jpg";
+        }
+        return null;
     }
 
     private Map<String, String> lireFormulaire(HttpServletRequest request) {

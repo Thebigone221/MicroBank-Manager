@@ -28,7 +28,7 @@
                             <c:forEach var="compteActif" items="${comptesActifs}">
                                 <option value="${compteActif.id}"
                                         ${sourceSelectionnee eq compteActif.id ? 'selected' : ''}>
-                                        ${compteActif.numeroCompte} - ${compteActif.client.nomComplet}
+                                        ${compteActif.numeroCompte} - ${fn:escapeXml(compteActif.client.nomComplet)}
                                     (solde : ${compteActif.solde} FCFA)
                                 </option>
                             </c:forEach>
@@ -46,7 +46,7 @@
                             <c:forEach var="compteActif" items="${comptesActifs}">
                                 <option value="${compteActif.id}"
                                         ${destinationSelectionnee eq compteActif.id ? 'selected' : ''}>
-                                        ${compteActif.numeroCompte} - ${compteActif.client.nomComplet}
+                                        ${compteActif.numeroCompte} - ${fn:escapeXml(compteActif.client.nomComplet)}
                                 </option>
                             </c:forEach>
                         </select>

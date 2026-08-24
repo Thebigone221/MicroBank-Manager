@@ -18,7 +18,7 @@
                     </div>
                     <div class="text-end">
                         <span class="small text-muted d-block">Titulaire</span>
-                        <strong>${compte.client.nomComplet}</strong>
+                        <strong>${fn:escapeXml(compte.client.nomComplet)}</strong>
                     </div>
                     <div class="text-end">
                         <span class="small text-muted d-block">Solde</span>

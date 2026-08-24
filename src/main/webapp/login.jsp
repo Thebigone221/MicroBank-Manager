@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%
     String flashSuccess = (String) session.getAttribute("flashSuccess");
     String flashError = (String) session.getAttribute("flashError");
@@ -8,6 +9,7 @@
     request.setAttribute("flashSuccess", flashSuccess);
     request.setAttribute("flashError", flashError);
     String erreurLogin = (String) request.getAttribute("erreur");
+    request.setAttribute("erreurLogin", erreurLogin);
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,7 +44,7 @@
             <div class="mb-3">
                 <label for="login" class="form-label">Login</label>
                 <input type="text" class="form-control" id="login" name="login"
-                       value="${loginSaisi}" required autofocus
+                       value="${fn:escapeXml(loginSaisi)}" required autofocus
                        placeholder="Votre identifiant">
             </div>
             <div class="mb-4">
@@ -57,7 +59,7 @@
 
         <hr>
         <p class="text-center small text-muted mb-0">
-            Compte de test : admin / admin123 - agent / agent123
+
         </p>
     </div>
 </div>

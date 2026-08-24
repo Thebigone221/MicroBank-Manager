@@ -5,8 +5,8 @@ GRANT ALL PRIVILEGES ON microbank.* TO 'microbank'@'localhost';
 FLUSH PRIVILEGES;
 
 INSERT INTO app_user (nom, prenom, login, mot_de_passe, role, statut, date_creation) VALUES
-('GAYE', 'Abdoulaye', 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'ADMIN', 'ACTIF', '2026-01-05 08:32:00'),
-('DIOP', 'Awa',       'agent', 'f44d1ac9bf0c69b083380b86dbdf3b73797150e3cca4820ac399f7917e607647', 'AGENT', 'ACTIF', '2026-02-16 09:14:00');
+('GAYE', 'Abdoulaye', 'admin', 'pbkdf2$120000$AgHX4Ytsb9FVCvSt1OVQ9A==$1mTwJQBOGYb+odpvxXjnvsM+bOHqqXGlo+HmOziatJ8=', 'ADMIN', 'ACTIF', '2026-01-05 08:32:00'),
+('DIOP', 'Awa',       'agent', 'pbkdf2$120000$oBtLQR99ci0ro62DWd6Fjg==$bd1qZsI2ShNl1BcEPbUR+pdB/EfxZXJY9+xW+FkcsWo=', 'AGENT', 'ACTIF', '2026-02-16 09:14:00');
 
 INSERT INTO agency (code, nom, ville) VALUES
 ('DAK01', 'Agence Plateau',    'Dakar'),

@@ -35,7 +35,7 @@
                 <li class="list-group-item d-flex justify-content-between">
                     <span class="text-muted">Titulaire</span>
                     <a href="${pageContext.request.contextPath}/clients/details?id=${compte.client.id}">
-                        <strong>${compte.client.nomComplet}</strong>
+                        <strong>${fn:escapeXml(compte.client.nomComplet)}</strong>
                     </a>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
@@ -113,7 +113,7 @@
                         <td class="text-nowrap">${f:dateHeureFr(op.dateOperation)}</td>
                         <td>${op.reference}</td>
                         <td><span class="badge bg-secondary">${op.type}</span></td>
-                        <td class="small">${op.description}</td>
+                        <td class="small">${fn:escapeXml(op.description)}</td>
                         <td class="text-end ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? 'montant-moins' : 'montant-plus'}">
                                 ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? '-' : '+'}${f:nombre(op.montant)}
                         </td>

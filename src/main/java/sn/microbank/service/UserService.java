@@ -36,7 +36,7 @@ public class UserService {
         }
         Role role = Role.valueOf(roleStr);
         User user = new User(nom.trim(), prenom.trim(), login.trim(),
-                HashUtil.sha256(motDePasse), role);
+                HashUtil.hasher(motDePasse), role);
         return userDAO.save(user);
     }
 
@@ -63,7 +63,7 @@ public class UserService {
             if (motDePasse.length() < 6) {
                 throw new ServiceException("Le mot de passe doit contenir au moins 6 caractères.");
             }
-            user.setMotDePasse(HashUtil.sha256(motDePasse));
+            user.setMotDePasse(HashUtil.hasher(motDePasse));
         }
         return userDAO.update(user);
     }

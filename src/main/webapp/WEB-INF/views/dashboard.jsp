@@ -8,7 +8,7 @@
         <div class="sur-titre">MicroBank · Institution de microfinance</div>
         <h1 class="titre-page">Tableau de bord</h1>
         <div class="sous-titre">
-            <strong>${sessionScope.user.nomComplet}</strong> - voici l'activité de votre institution.
+            <strong>${fn:escapeXml(sessionScope.user.nomComplet)}</strong> - voici l'activité de votre institution.
         </div>
     </div>
     <div class="date-journal no-print">
