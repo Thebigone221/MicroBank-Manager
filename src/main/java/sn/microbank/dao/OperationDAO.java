@@ -82,13 +82,15 @@ public class OperationDAO extends GenericDAO<Operation> {
     public record Totaux(BigDecimal depots, BigDecimal retraits) {
     }
 
+    /** Totaux des dépôts / retraits, pour un compte donné ou globaux si accountId est null. */
     public Totaux totauxParType(Long accountId, LocalDateTime du, LocalDateTime au) {
         return inRead(em -> {
-            StringBuilder where = new StringBuilder(" WHERE o.compte.id = :accountId AND o.type IN (:depot, :retrait)");
+            StringBuilder where = new StringBuilder(" WHERE 1 = 1");
             Map<String, Object> params = new HashMap<>();
-            params.put("accountId", accountId);
-            params.put("depot", TypeOperation.DEPOT);
-            params.put("retrait", TypeOperation.RETRAIT);
+            if (accountId != null) {
+                where.append(" AND o.compte.id = :accountId");
+                params.put("accountId", accountId);
+            }
             if (du != null) {
                 where.append(" AND o.dateOperation >= :du");
                 params.put("du", du);
@@ -99,15 +101,21 @@ public class OperationDAO extends GenericDAO<Operation> {
             }
 
             var queryDepot = em.createQuery(
-                    "SELECT COALESCE(SUM(o.montant), 0) FROM Operation o" + where + " AND o.type = :depot",
+                    "SELECT COALESCE(SUM(o.montant), 0) FROM Operation o" + where
+                            + " AND o.type = :depot",
                     BigDecimal.class);
             var queryRetrait = em.createQuery(
-                    "SELECT COALESCE(SUM(o.montant), 0) FROM Operation o" + where + " AND o.type = :retrait",
+                    "SELECT COALESCE(SUM(o.montant), 0) FROM Operation o" + where
+                            + " AND o.type = :retrait",
                     BigDecimal.class);
+            // Paramètres communs (compte / période) sur les deux requêtes
             params.forEach((nom, valeur) -> {
                 queryDepot.setParameter(nom, valeur);
                 queryRetrait.setParameter(nom, valeur);
             });
+            // Chaque requête ne possède que son propre paramètre de type
+            queryDepot.setParameter("depot", TypeOperation.DEPOT);
+            queryRetrait.setParameter("retrait", TypeOperation.RETRAIT);
 
             return new Totaux(queryDepot.getSingleResult(), queryRetrait.getSingleResult());
         });

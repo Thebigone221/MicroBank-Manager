@@ -1,25 +1,41 @@
 /* ============================================================
    MicroBank Manager — styles complémentaires à Bootstrap 5
+   Identité : vert institutionnel profond + accent or
    ============================================================ */
 :root {
     --mb-vert: #0d5c42;
-    --mb-vert-fonce: #083d2c;
-    --mb-or: #e8b23a;
+    --mb-vert-fonce: #062e21;
+    --mb-vert-clair: #e7f2ec;
+    --mb-or: #d9a429;
+    --mb-or-clair: #fdf6e3;
+    --mb-encre: #1b2b25;
+    --mb-gris: #5f6f68;
 }
 
 body {
-    background-color: #f4f6f5;
+    background-color: #f2f5f3;
     min-height: 100vh;
+    color: var(--mb-encre);
 }
 
-/* Navbar */
+/* ------------------------------------------------------------
+   Navbar
+   ------------------------------------------------------------ */
 .navbar-microbank {
-    background-color: var(--mb-vert);
+    background: linear-gradient(90deg, var(--mb-vert-fonce) 0%, var(--mb-vert) 70%);
+    border-bottom: 3px solid var(--mb-or);
+}
+.navbar-microbank .navbar-brand {
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+.navbar-microbank .navbar-brand .bi {
+    color: var(--mb-or);
 }
 .navbar-microbank .navbar-brand,
 .navbar-microbank .nav-link,
 .navbar-microbank .dropdown-item {
-    color: #ffffff;
+    color: #f2f7f4;
 }
 .navbar-microbank .navbar-brand:hover,
 .navbar-microbank .nav-link:hover {
@@ -30,45 +46,175 @@ body {
     font-weight: 600;
 }
 
-/* Page de connexion */
+/* ------------------------------------------------------------
+   Page de connexion
+   ------------------------------------------------------------ */
 .login-page {
-    background: linear-gradient(135deg, var(--mb-vert) 0%, var(--mb-vert-fonce) 100%);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(217, 164, 41, .18) 0%, transparent 40%),
+        linear-gradient(135deg, var(--mb-vert) 0%, var(--mb-vert-fonce) 100%);
     min-height: 100vh;
 }
 .login-card {
     max-width: 420px;
+    border: none;
     border-top: 6px solid var(--mb-or);
+    box-shadow: 0 24px 60px rgba(4, 30, 22, .45);
 }
-
-/* Cartes de statistiques du tableau de bord */
-.stat-card {
-    border-left: 5px solid var(--mb-vert);
-}
-.stat-card .stat-valeur {
-    font-size: 1.6rem;
+.login-card .brand-titre {
     font-weight: 700;
+    letter-spacing: .05em;
     color: var(--mb-vert-fonce);
 }
-.stat-card.or { border-left-color: var(--mb-or); }
-.stat-card.rouge { border-left-color: #c0392b; }
-.stat-card.bleu { border-left-color: #2471a3; }
 
-/* Tableaux : en-tête vert banque */
-.table-microbank thead th {
-    background-color: var(--mb-vert);
+/* ------------------------------------------------------------
+   En-tête de page (bandeau héro)
+   ------------------------------------------------------------ */
+.hero-page {
+    background: linear-gradient(120deg, var(--mb-vert-fonce), var(--mb-vert));
     color: #ffffff;
+    border-radius: .75rem;
+    padding: 1.35rem 1.5rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+.hero-page::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -60px;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217, 164, 41, .28) 0%, transparent 70%);
+}
+.hero-page .hero-titre {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+    margin: 0;
+}
+.hero-page .hero-sous-titre {
+    color: rgba(255, 255, 255, .78);
+    font-size: .875rem;
+}
+
+/* ------------------------------------------------------------
+   Cartes de statistiques
+   ------------------------------------------------------------ */
+.stat-card {
+    border: none;
+    border-radius: .75rem;
+    box-shadow: 0 1px 2px rgba(27, 43, 37, .06), 0 8px 24px rgba(27, 43, 37, .07);
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(27, 43, 37, .08), 0 14px 32px rgba(27, 43, 37, .11);
+}
+.stat-card .card-body {
+    padding: 1.15rem 1.25rem;
+}
+.stat-card .stat-libelle {
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: var(--mb-gris);
+}
+.stat-card .stat-valeur {
+    font-size: 1.9rem;
+    font-weight: 750;
+    line-height: 1.15;
+    color: var(--mb-encre);
+    font-variant-numeric: tabular-nums;
+    margin: .15rem 0 .3rem;
+}
+.stat-card .stat-detail {
+    font-size: .82rem;
+    color: var(--mb-gris);
+}
+/* Puce d'icône */
+.stat-icone {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex: none;
+}
+.icone-vert { background: var(--mb-vert-clair); color: var(--mb-vert); }
+.icone-bleu { background: #e8f0f7; color: #2471a3; }
+.icone-or   { background: var(--mb-or-clair); color: #a67c10; }
+.icone-rouge{ background: #fbe9e7; color: #c0392b; }
+
+/* Mini statistiques empilées (opérations du jour) */
+.mini-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .75rem;
+}
+.mini-stat .mini-valeur {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Cartes génériques */
+.card {
+    border: none;
+    border-radius: .75rem;
+    box-shadow: 0 1px 2px rgba(27, 43, 37, .05), 0 6px 20px rgba(27, 43, 37, .06);
+}
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #edf1ef;
+    border-radius: .75rem .75rem 0 0 !important;
+    padding: .9rem 1.1rem;
+}
+
+/* ------------------------------------------------------------
+   Tableaux : en-tête sobre, lignes aérées
+   ------------------------------------------------------------ */
+.table-microbank thead th {
+    background-color: var(--mb-vert-clair);
+    color: var(--mb-vert-fonce);
+    font-size: .74rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    font-weight: 700;
+    border-bottom: none !important;
+    padding: .8rem 1rem;
 }
 .table-microbank td {
     vertical-align: middle;
+    padding: .85rem 1rem;
+    border-color: #eef2f0;
 }
 
 /* Montants */
-.montant-plus { color: #1e8449; font-weight: 600; }
-.montant-moins { color: #c0392b; font-weight: 600; }
+.montant-plus { color: #1e8449; font-weight: 650; }
+.montant-moins { color: #c0392b; font-weight: 650; }
 
 /* Badges de statut personnalisés */
 .badge-courant { background-color: #2471a3; }
 .badge-epargne { background-color: #7d6608; }
+
+/* Badge par type d'opération */
+.badge-op-depot    { background-color: #d1e7dd; color: #0a3622; }
+.badge-op-retrait  { background-color: #f8d7da; color: #58151c; }
+.badge-op-virement { background-color: #dbeafe; color: #1e3a8a; }
+
+/* Référence monospace discrète */
+.ref-operation {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .84em;
+    color: var(--mb-gris);
+}
 
 /* Impression du relevé (Bonus 5) */
 @media print {
