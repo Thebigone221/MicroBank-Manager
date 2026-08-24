@@ -1,0 +1,21 @@
+# Build Maven
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Logs et fichiers temporaires
+*.log
+logs/
+
+# Fichiers uploadés (hors dépôt)
+microbank-uploads/
+
+# OS
+Thumbs.db
+.DS_Store
