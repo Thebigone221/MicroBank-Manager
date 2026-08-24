@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import sn.microbank.service.DashboardService;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
@@ -18,6 +21,8 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("stats", dashboardService.statistiques());
+        request.setAttribute("dateJour", LocalDate.now()
+                .format(DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.FRENCH)));
         request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
     }
 }

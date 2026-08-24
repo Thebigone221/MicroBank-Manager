@@ -71,16 +71,16 @@
         <tbody>
         <c:forEach var="op" items="${resultat.items}">
             <tr>
-                <td class="text-nowrap">${f:dateHeureFr(op.dateOperation)}</td>
-                <td>${op.reference}</td>
-                <td><span class="badge bg-secondary">${op.type}</span></td>
+                <td class="mono text-nowrap pe-0">${f:dateHeureFr(op.dateOperation)}</td>
+                <td><span class="ref-operation">${op.reference}</span></td>
+                <td><span class="badge ${op.type == 'DEPOT' ? 'badge-op-depot' : op.type == 'RETRAIT' ? 'badge-op-retrait' : 'badge-op-virement'}">${op.type}</span></td>
                 <td class="small">${op.description}</td>
                 <td>
                     <a href="${pageContext.request.contextPath}/accounts/details?id=${op.compte.id}"
                        class="fw-semibold">${op.compte.numeroCompte}</a>
                     <span class="small text-muted">(${op.compte.client.prenom} ${op.compte.client.nom})</span>
                 </td>
-                <td class="text-end ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? 'montant-moins' : 'montant-plus'}">
+                <td class="mono text-end ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? 'montant-moins' : 'montant-plus'}">
                         ${op.type == 'RETRAIT' || (op.type == 'VIREMENT' and empty op.compteDestination) ? '-' : '+'}${f:nombre(op.montant)} FCFA
                 </td>
             </tr>
