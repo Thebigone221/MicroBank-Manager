@@ -98,4 +98,4 @@ La documentation détaillée (règles de gestion, routes, schéma de base) est d
 
 ## Auteur
 
-Projet de fin de module, Développement Web (Java EE).
+Mouhamadou Gueye - Projet de fin de module, Développement Web (Java EE).
