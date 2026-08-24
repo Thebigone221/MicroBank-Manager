@@ -18,7 +18,7 @@ public class CharsetFilter implements Filter {
             rep.setHeader("X-Frame-Options", "DENY");
             rep.setHeader("Referrer-Policy", "no-referrer");
             rep.setHeader("Content-Security-Policy",
-                    "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'");
+                    "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'");
         }
         chain.doFilter(request, response);
     }
