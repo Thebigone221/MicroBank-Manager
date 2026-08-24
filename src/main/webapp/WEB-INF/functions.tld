@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                            https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+        version="3.0">
+
+    <description>Fonctions de formatage MicroBank</description>
+    <tlib-version>1.0</tlib-version>
+    <short-name>f</short-name>
+    <uri>http://microbank.sn/functions</uri>
+
+    <function>
+        <description>Montant formaté en FCFA</description>
+        <name>fcfa</name>
+        <function-class>sn.microbank.util.FormatUtil</function-class>
+        <function-signature>java.lang.String fcfa(java.math.BigDecimal)</function-signature>
+    </function>
+
+    <function>
+        <description>Nombre avec séparateurs de milliers</description>
+        <name>nombre</name>
+        <function-class>sn.microbank.util.FormatUtil</function-class>
+        <function-signature>java.lang.String nombre(java.math.BigDecimal)</function-signature>
+    </function>
+
+    <function>
+        <description>Date au format français</description>
+        <name>dateFr</name>
+        <function-class>sn.microbank.util.FormatUtil</function-class>
+        <function-signature>java.lang.String dateFr(java.time.LocalDate)</function-signature>
+    </function>
+
+    <function>
+        <description>Date et heure au format français</description>
+        <name>dateHeureFr</name>
+        <function-class>sn.microbank.util.FormatUtil</function-class>
+        <function-signature>java.lang.String dateHeureFr(java.time.LocalDateTime)</function-signature>
+    </function>
+</taglib>

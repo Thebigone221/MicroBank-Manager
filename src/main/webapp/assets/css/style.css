@@ -1,0 +1,78 @@
+/* ============================================================
+   MicroBank Manager — styles complémentaires à Bootstrap 5
+   ============================================================ */
+:root {
+    --mb-vert: #0d5c42;
+    --mb-vert-fonce: #083d2c;
+    --mb-or: #e8b23a;
+}
+
+body {
+    background-color: #f4f6f5;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar-microbank {
+    background-color: var(--mb-vert);
+}
+.navbar-microbank .navbar-brand,
+.navbar-microbank .nav-link,
+.navbar-microbank .dropdown-item {
+    color: #ffffff;
+}
+.navbar-microbank .navbar-brand:hover,
+.navbar-microbank .nav-link:hover {
+    color: var(--mb-or);
+}
+.navbar-microbank .nav-link.active {
+    color: var(--mb-or);
+    font-weight: 600;
+}
+
+/* Page de connexion */
+.login-page {
+    background: linear-gradient(135deg, var(--mb-vert) 0%, var(--mb-vert-fonce) 100%);
+    min-height: 100vh;
+}
+.login-card {
+    max-width: 420px;
+    border-top: 6px solid var(--mb-or);
+}
+
+/* Cartes de statistiques du tableau de bord */
+.stat-card {
+    border-left: 5px solid var(--mb-vert);
+}
+.stat-card .stat-valeur {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--mb-vert-fonce);
+}
+.stat-card.or { border-left-color: var(--mb-or); }
+.stat-card.rouge { border-left-color: #c0392b; }
+.stat-card.bleu { border-left-color: #2471a3; }
+
+/* Tableaux : en-tête vert banque */
+.table-microbank thead th {
+    background-color: var(--mb-vert);
+    color: #ffffff;
+}
+.table-microbank td {
+    vertical-align: middle;
+}
+
+/* Montants */
+.montant-plus { color: #1e8449; font-weight: 600; }
+.montant-moins { color: #c0392b; font-weight: 600; }
+
+/* Badges de statut personnalisés */
+.badge-courant { background-color: #2471a3; }
+.badge-epargne { background-color: #7d6608; }
+
+/* Impression du relevé (Bonus 5) */
+@media print {
+    .no-print, .no-print * { display: none !important; }
+    body { background-color: #ffffff; }
+    .print-area { box-shadow: none !important; border: none !important; }
+}
