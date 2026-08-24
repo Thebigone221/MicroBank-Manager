@@ -3,12 +3,11 @@
 <%@ taglib prefix="f" uri="http://microbank.sn/functions" %>
 <%@ include file="/includes/header.jspf" %>
 
-<!-- Bandeau d'accueil -->
 <div class="hero-page d-flex justify-content-between align-items-center flex-wrap gap-3">
     <div>
         <h1 class="hero-titre"><i class="bi bi-speedometer2 me-2"></i>Tableau de bord</h1>
         <div class="hero-sous-titre">
-            Bienvenue, <strong>${sessionScope.user.nomComplet}</strong> — voici l'activité de votre institution.
+            Bienvenue, <strong>${sessionScope.user.nomComplet}</strong> - voici l'activité de votre institution.
         </div>
     </div>
     <div class="d-flex gap-2 no-print position-relative" style="z-index:1">
@@ -23,7 +22,6 @@
     </div>
 </div>
 
-<!-- Statistiques principales -->
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
         <div class="card stat-card h-100">
@@ -85,7 +83,6 @@
 </div>
 
 <div class="row g-3">
-    <!-- Bonus 3 : répartition par type -->
     <div class="col-lg-4">
         <div class="card h-100">
             <div class="card-header fw-semibold">
@@ -127,7 +124,6 @@
         </div>
     </div>
 
-    <!-- Dernières opérations -->
     <div class="col-lg-8">
         <div class="card h-100">
             <div class="card-header fw-semibold d-flex justify-content-between align-items-center">

@@ -10,27 +10,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Service des opérations bancaires.
- * <p>
- * Chaque opération financière s'exécute dans UNE SEULE transaction :
- * pour un virement, le débit du compte source, le crédit du compte
- * destination et l'enregistrement des opérations sont indissociables.
- * Toute erreur provoque un ROLLBACK complet (aucune modification conservée).
- */
 public class OperationService {
 
     private final AccountDAO accountDAO = new AccountDAO();
     private final OperationDAO operationDAO = new OperationDAO();
 
-    /** Dépôt : montant > 0, compte existant et actif. */
     public void effectuerDepot(Long accountId, BigDecimal montant, User agent, String description) {
         GenericDAO.inTransaction(em -> {
             Account compte = em.find(Account.class, accountId);
             verifierCompte(compte, "destination du dépôt");
             verifierMontant(montant);
 
-            // Mise à jour du solde + enregistrement de l'opération, dans la même transaction.
             compte.setSolde(compte.getSolde().add(montant));
 
             Operation operation = new Operation();
@@ -47,11 +37,6 @@ public class OperationService {
         });
     }
 
-    /**
-     * Retrait : montant > 0, compte existant et actif, solde suffisant.
-     *
-     * @throws ServiceException si le solde est insuffisant (ROLLBACK)
-     */
     public void effectuerRetrait(Long accountId, BigDecimal montant, User agent, String description) {
         GenericDAO.inTransaction(em -> {
             Account compte = em.find(Account.class, accountId);
@@ -79,10 +64,6 @@ public class OperationService {
         });
     }
 
-    /**
-     * Virement entre deux comptes différents, tous deux actifs.
-     * Débit + crédit + enregistrement des opérations = UNE transaction.
-     */
     public void effectuerVirement(Long sourceId, Long destinationId, BigDecimal montant,
                                   User agent, String description) {
         if (sourceId != null && sourceId.equals(destinationId)) {
@@ -106,7 +87,6 @@ public class OperationService {
 
             LocalDateTime maintenant = LocalDateTime.now();
 
-            // 1. Débit du compte source
             source.setSolde(source.getSolde().subtract(montant));
             Operation sortie = new Operation();
             sortie.setReference(genererReference(em));
@@ -119,7 +99,6 @@ public class OperationService {
             sortie.setAgent(agent);
             em.persist(sortie);
 
-            // 2. Crédit du compte destination
             destination.setSolde(destination.getSolde().add(montant));
             Operation entree = new Operation();
             entree.setReference(genererReference(em));
@@ -133,7 +112,6 @@ public class OperationService {
             entree.setAgent(agent);
             em.persist(entree);
 
-            // Si une erreur survient au-delà de ce point, tout est annulé (rollback).
             return null;
         });
     }
@@ -142,7 +120,6 @@ public class OperationService {
         return a.getId() != null && a.getId().equals(b.getId());
     }
 
-    /** Génère une référence d'opération unique de la forme OP-00001. */
     private static String genererReference(jakarta.persistence.EntityManager em) {
         long maxId = em.createQuery("SELECT COALESCE(MAX(o.id), 0) FROM Operation o", Long.class)
                 .getSingleResult();

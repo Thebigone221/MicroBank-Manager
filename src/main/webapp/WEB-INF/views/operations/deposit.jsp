@@ -26,7 +26,6 @@
                     </div>
                 </div>
 
-                <!-- POST /operations/deposit -->
                 <form method="post"
                       action="${pageContext.request.contextPath}/operations/deposit?accountId=${compte.id}">
                     <input type="hidden" name="accountId" value="${compte.id}">

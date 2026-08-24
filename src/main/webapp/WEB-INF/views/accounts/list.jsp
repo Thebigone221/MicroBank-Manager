@@ -13,7 +13,6 @@
 <div class="card">
     <div class="card-body">
 
-        <!-- Recherche et filtres : GET /accounts?search=&type=&statut=&agenceId= -->
         <form method="get" action="${pageContext.request.contextPath}/accounts" class="row g-2 mb-3">
             <div class="col-md-4">
                 <input type="text" class="form-control" name="search" value="${recherche}"
@@ -92,7 +91,7 @@
         <c:if test="${resultat.totalPages > 1}">
             <nav aria-label="Pagination des comptes"
                  class="d-flex justify-content-between align-items-center mt-3">
-                <span class="small text-muted">${resultat.total} compte(s) — page ${resultat.page + 1} / ${resultat.totalPages}</span>
+                <span class="small text-muted">${resultat.total} compte(s) - page ${resultat.page + 1} / ${resultat.totalPages}</span>
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item ${resultat.hasPrevious() ? '' : 'disabled'}">
                         <a class="page-link"

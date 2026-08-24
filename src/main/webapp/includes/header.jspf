@@ -99,7 +99,6 @@
 
 <main class="container py-4">
 
-    <!-- Messages de succès / d'erreur -->
     <c:if test="${not empty flashSuccess}">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i>${flashSuccess}

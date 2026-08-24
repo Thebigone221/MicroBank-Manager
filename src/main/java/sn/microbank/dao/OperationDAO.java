@@ -9,19 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * DAO de l'entité Operation : historique filtré et paginé en JPA.
- */
 public class OperationDAO extends GenericDAO<Operation> {
 
     public OperationDAO() {
         super(Operation.class);
     }
 
-    /**
-     * Recherche paginée de l'historique avec filtres combinables
-     * (Bonus 2 : compte, client, type, période, bornes de montant).
-     */
     public PagedResult<Operation> search(Long accountId, Long clientId, String numeroCompte,
                                          TypeOperation type, LocalDateTime du, LocalDateTime au,
                                          BigDecimal montantMin, BigDecimal montantMax,
@@ -78,11 +71,9 @@ public class OperationDAO extends GenericDAO<Operation> {
         });
     }
 
-    /** Totaux des dépôts / retraits d'un compte sur une période (pour le relevé PDF). */
     public record Totaux(BigDecimal depots, BigDecimal retraits) {
     }
 
-    /** Totaux des dépôts / retraits, pour un compte donné ou globaux si accountId est null. */
     public Totaux totauxParType(Long accountId, LocalDateTime du, LocalDateTime au) {
         return inRead(em -> {
             StringBuilder where = new StringBuilder(" WHERE 1 = 1");
@@ -108,12 +99,12 @@ public class OperationDAO extends GenericDAO<Operation> {
                     "SELECT COALESCE(SUM(o.montant), 0) FROM Operation o" + where
                             + " AND o.type = :retrait",
                     BigDecimal.class);
-            // Paramètres communs (compte / période) sur les deux requêtes
+
             params.forEach((nom, valeur) -> {
                 queryDepot.setParameter(nom, valeur);
                 queryRetrait.setParameter(nom, valeur);
             });
-            // Chaque requête ne possède que son propre paramètre de type
+
             queryDepot.setParameter("depot", TypeOperation.DEPOT);
             queryRetrait.setParameter("retrait", TypeOperation.RETRAIT);
 
@@ -121,7 +112,6 @@ public class OperationDAO extends GenericDAO<Operation> {
         });
     }
 
-    /** Nombre d'opérations réalisées aujourd'hui (tableau de bord). */
     public long countSince(LocalDateTime date) {
         return inRead(em -> em.createQuery(
                         "SELECT COUNT(o) FROM Operation o WHERE o.dateOperation >= :date", Long.class)
@@ -129,7 +119,6 @@ public class OperationDAO extends GenericDAO<Operation> {
                 .getSingleResult());
     }
 
-    /** Dernières opérations (tableau de bord amélioré — Bonus 3). */
     public List<Operation> findLatest(int limite) {
         return inRead(em -> em.createQuery(
                         "SELECT o FROM Operation o ORDER BY o.dateOperation DESC, o.id DESC",

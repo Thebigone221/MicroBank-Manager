@@ -10,19 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * DAO de l'entité Client : CRUD générique + recherche paginée en JPQL.
- */
 public class ClientDAO extends GenericDAO<Client> {
 
     public ClientDAO() {
         super(Client.class);
     }
 
-    /**
-     * Recherche multi-critères (nom, prénom, téléphone, numéro de pièce)
-     * avec pagination réalisée par JPA (setFirstResult / setMaxResults).
-     */
     public PagedResult<Client> search(String terme, Statut statut, int page, int size) {
         StringBuilder where = new StringBuilder(" WHERE 1 = 1");
         Map<String, Object> params = new HashMap<>();
@@ -73,7 +66,6 @@ public class ClientDAO extends GenericDAO<Client> {
                 .getSingleResult());
     }
 
-    /** Compte les clients créés depuis une date donnée. */
     public long countCreatedSince(LocalDateTime date) {
         return inRead((EntityManager em) -> em.createQuery(
                         "SELECT COUNT(c) FROM Client c WHERE c.dateCreation >= :date", Long.class)

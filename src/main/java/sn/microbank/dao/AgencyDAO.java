@@ -5,9 +5,6 @@ import sn.microbank.model.Agency;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO de l'entité Agency (Bonus 4).
- */
 public class AgencyDAO extends GenericDAO<Agency> {
 
     public AgencyDAO() {
@@ -16,7 +13,7 @@ public class AgencyDAO extends GenericDAO<Agency> {
 
     @Override
     public List<Agency> findPage(int page, int size) {
-        // Les agences sont peu nombreuses : tri alphabétique pour la liste.
+
         return inRead(em -> em.createQuery("SELECT a FROM Agency a ORDER BY a.nom", Agency.class)
                 .setFirstResult(page * size)
                 .setMaxResults(size)

@@ -16,7 +16,6 @@
                     </div>
                 </c:if>
 
-                <!-- POST /operations/transfer -->
                 <form method="post"
                       action="${pageContext.request.contextPath}/operations/transfer">
 
@@ -25,11 +24,11 @@
                                 class="text-danger">*</span></label>
                         <select name="compteSource" id="compteSource"
                                 class="form-select ${not empty erreurs['compteSource'] ? 'is-invalid' : ''}" required>
-                            <option value="">— Sélectionner le compte à débiter —</option>
+                            <option value="">- Sélectionner le compte à débiter -</option>
                             <c:forEach var="compteActif" items="${comptesActifs}">
                                 <option value="${compteActif.id}"
                                         ${sourceSelectionnee eq compteActif.id ? 'selected' : ''}>
-                                        ${compteActif.numeroCompte} — ${compteActif.client.nomComplet}
+                                        ${compteActif.numeroCompte} - ${compteActif.client.nomComplet}
                                     (solde : ${compteActif.solde} FCFA)
                                 </option>
                             </c:forEach>
@@ -43,11 +42,11 @@
                         <select name="compteDestination" id="compteDestination"
                                 class="form-select ${not empty erreurs['compteDestination'] ? 'is-invalid' : ''}"
                                 required>
-                            <option value="">— Sélectionner le compte à créditer —</option>
+                            <option value="">- Sélectionner le compte à créditer -</option>
                             <c:forEach var="compteActif" items="${comptesActifs}">
                                 <option value="${compteActif.id}"
                                         ${destinationSelectionnee eq compteActif.id ? 'selected' : ''}>
-                                        ${compteActif.numeroCompte} — ${compteActif.client.nomComplet}
+                                        ${compteActif.numeroCompte} - ${compteActif.client.nomComplet}
                                 </option>
                             </c:forEach>
                         </select>

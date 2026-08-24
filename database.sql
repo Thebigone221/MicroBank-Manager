@@ -1,22 +1,10 @@
--- ============================================================
--- MicroBank Manager — Script de création de la base de données
--- SGBD : MySQL 5.7+ / 8.x
--- Usage : mysql -u root -p < database.sql
--- ============================================================
-
 CREATE DATABASE IF NOT EXISTS microbank CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE microbank;
 
--- Utilisateur applicatif utilisé par persistence.xml
 CREATE USER IF NOT EXISTS 'microbank'@'localhost' IDENTIFIED BY 'microbank123';
 GRANT ALL PRIVILEGES ON microbank.* TO 'microbank'@'localhost';
 FLUSH PRIVILEGES;
 
--- ------------------------------------------------------------
--- Tables (identiques au schéma généré par Hibernate/JPA)
--- ------------------------------------------------------------
-
--- Utilisateurs de l'application (agents et administrateurs)
 CREATE TABLE IF NOT EXISTS app_user (
     id            BIGINT       NOT NULL AUTO_INCREMENT,
     nom           VARCHAR(60)  NOT NULL,
@@ -30,7 +18,6 @@ CREATE TABLE IF NOT EXISTS app_user (
     UNIQUE KEY uk_user_login (login)
 ) ENGINE = InnoDB;
 
--- Agences (Bonus 4)
 CREATE TABLE IF NOT EXISTS agency (
     id   BIGINT      NOT NULL AUTO_INCREMENT,
     code VARCHAR(10) NOT NULL,
@@ -40,7 +27,6 @@ CREATE TABLE IF NOT EXISTS agency (
     UNIQUE KEY uk_agency_code (code)
 ) ENGINE = InnoDB;
 
--- Clients de l'institution
 CREATE TABLE IF NOT EXISTS client (
     id             BIGINT       NOT NULL AUTO_INCREMENT,
     nom            VARCHAR(60)  NOT NULL,
@@ -57,7 +43,6 @@ CREATE TABLE IF NOT EXISTS client (
     UNIQUE KEY uk_client_numero_piece (numero_piece)
 ) ENGINE = InnoDB;
 
--- Comptes bancaires
 CREATE TABLE IF NOT EXISTS account (
     id              BIGINT        NOT NULL AUTO_INCREMENT,
     numero_compte   VARCHAR(20)   NOT NULL,
@@ -73,7 +58,6 @@ CREATE TABLE IF NOT EXISTS account (
     CONSTRAINT fk_account_agency FOREIGN KEY (agency_id) REFERENCES agency (id)
 ) ENGINE = InnoDB;
 
--- Opérations bancaires
 CREATE TABLE IF NOT EXISTS operation (
     id                    BIGINT        NOT NULL AUTO_INCREMENT,
     reference             VARCHAR(20)   NOT NULL,
@@ -90,13 +74,6 @@ CREATE TABLE IF NOT EXISTS operation (
     CONSTRAINT fk_operation_compte_dest FOREIGN KEY (compte_destination_id) REFERENCES account (id),
     CONSTRAINT fk_operation_agent FOREIGN KEY (agent_id) REFERENCES app_user (id)
 ) ENGINE = InnoDB;
-
--- ------------------------------------------------------------
--- Données de test
--- Mots de passe hashés en SHA-256 :
---   admin123 -> 240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9
---   agent123 -> f44d1ac9bf0c69b083380b86dbdf3b73797150e3cca4820ac399f7917e607647
--- ------------------------------------------------------------
 
 INSERT INTO app_user (nom, prenom, login, mot_de_passe, role, statut, date_creation) VALUES
 ('GAYE',    'Abdoulaye', 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'ADMIN', 'ACTIF', NOW()),
@@ -123,7 +100,3 @@ INSERT INTO operation (reference, type, montant, date_operation, description, co
 ('OP-00004', 'VIREMENT',25000,  NOW(), 'Virement → MB100001',                    2, 1,    2),
 ('OP-00005', 'DEPOT',   100000, NOW(), 'Dépôt initial à l''ouverture du compte', 3, NULL, 1),
 ('OP-00006', 'RETRAIT', 25000,  NOW(), 'Retrait au guichet',                     3, NULL, 1);
-
--- ============================================================
--- Fin du script
--- ============================================================

@@ -9,9 +9,6 @@ import sn.microbank.service.DashboardService;
 
 import java.io.IOException;
 
-/**
- * Tableau de bord : statistiques globales de l'institution.
- */
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
 

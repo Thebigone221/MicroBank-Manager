@@ -6,9 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Compte bancaire appartenant à un client.
- */
 @Entity
 @Table(name = "account",
        uniqueConstraints = @UniqueConstraint(name = "uk_account_numero", columnNames = "numero_compte"))
@@ -25,7 +22,6 @@ public class Account {
     @Column(nullable = false, length = 10)
     private TypeCompte type;
 
-    /** Solde du compte en FCFA (toujours >= 0 après validation des opérations). */
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal solde = BigDecimal.ZERO;
 
@@ -36,19 +32,16 @@ public class Account {
     @Column(nullable = false, length = 10)
     private CompteStatut statut;
 
-    /** Relation JPA : plusieurs comptes pour un seul client (* --- 1). */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "client_id", nullable = false,
                 foreignKey = @ForeignKey(name = "fk_account_client"))
     private Client client;
 
-    /** Relation Bonus 4 : compte rattaché à une agence. */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "agency_id",
                 foreignKey = @ForeignKey(name = "fk_account_agency"))
     private Agency agency;
 
-    /** Relation JPA : un compte possède plusieurs opérations (1 --- *). */
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "compte", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Operation> operations = new ArrayList<>();
 
@@ -58,8 +51,6 @@ public class Account {
     public boolean isActif() {
         return statut == CompteStatut.ACTIF;
     }
-
-    // Getters / Setters
 
     public Long getId() {
         return id;

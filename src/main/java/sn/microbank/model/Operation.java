@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Opération bancaire (dépôt, retrait ou virement) effectuée sur un compte
- * par un agent de l'institution.
- */
 @Entity
 @Table(name = "operation",
        uniqueConstraints = @UniqueConstraint(name = "uk_operation_reference", columnNames = "reference"))
@@ -24,7 +20,6 @@ public class Operation {
     @Column(nullable = false, length = 10)
     private TypeOperation type;
 
-    /** Montant toujours positif ; le type détermine le sens du mouvement. */
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal montant;
 
@@ -34,19 +29,16 @@ public class Operation {
     @Column(length = 200)
     private String description;
 
-    /** Compte sur lequel l'opération est enregistrée (* --- 1). */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "compte_id", nullable = false,
                 foreignKey = @ForeignKey(name = "fk_operation_compte"))
     private Account compte;
 
-    /** Compte destination dans le cas d'un virement entrant. */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "compte_destination_id",
                 foreignKey = @ForeignKey(name = "fk_operation_compte_dest"))
     private Account compteDestination;
 
-    /** Agent ayant réalisé l'opération : User 1 --- * Operation. */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "agent_id", nullable = false,
                 foreignKey = @ForeignKey(name = "fk_operation_agent"))
@@ -54,8 +46,6 @@ public class Operation {
 
     public Operation() {
     }
-
-    // Getters / Setters
 
     public Long getId() {
         return id;

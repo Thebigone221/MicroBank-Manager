@@ -15,10 +15,6 @@ import sn.microbank.service.UserService;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Gestion des utilisateurs — réservée à l'ADMIN (contrôle dans AuthFilter) :
- * liste, création, modification, activation / désactivation.
- */
 @WebServlet(urlPatterns = {"/users", "/users/*"})
 public class UserServlet extends HttpServlet {
 
@@ -131,7 +127,6 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // GET /users/toggle?id=...
     private void basculer(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         Long id = ServletUtil.id(request.getParameter("id"));
@@ -154,7 +149,6 @@ public class UserServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/users/form.jsp").forward(request, response);
     }
 
-    /** Repositionne les valeurs saisies après une erreur de validation. */
     private void garderValeurs(HttpServletRequest request) {
         if (request.getAttribute("userEdit") == null
                 && request.getParameter("id") != null) {

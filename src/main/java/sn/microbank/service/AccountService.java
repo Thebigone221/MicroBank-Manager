@@ -13,23 +13,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Service de gestion des comptes bancaires.
- * L'ouverture d'un compte (création + dépôt initial) est atomique.
- */
 public class AccountService {
 
     private final AccountDAO accountDAO = new AccountDAO();
     private final ClientDAO clientDAO = new ClientDAO();
     private final AgencyDAO agencyDAO = new AgencyDAO();
 
-    /**
-     * Ouvre un compte pour un client, avec un dépôt initial facultatif.
-     * La création du compte ET le dépôt initial se font dans UNE SEULE
-     * transaction : en cas d'erreur rien n'est conservé.
-     *
-     * @return le compte créé
-     */
     public Account ouvrirCompte(Long clientId, TypeCompte type, BigDecimal depotInitial,
                                 Long agenceId, User agent) {
         if (clientId == null) {
@@ -67,7 +56,6 @@ public class AccountService {
                 return compte;
             }
 
-            // Dépôt initial enregistré comme une vraie opération.
             compte.setSolde(depotInitial);
             em.persist(compte);
             em.flush();
@@ -86,7 +74,6 @@ public class AccountService {
         });
     }
 
-    /** Génère un numéro de compte unique de la forme MB100001. */
     private String genererNumeroCompte(jakarta.persistence.EntityManager em) {
         long total = em.createQuery("SELECT COUNT(a) FROM Account a", Long.class).getSingleResult();
         long maxId = em.createQuery("SELECT COALESCE(MAX(a.id), 0) FROM Account a", Long.class).getSingleResult();
@@ -103,15 +90,11 @@ public class AccountService {
         throw new ServiceException("Impossible de générer un numéro de compte.");
     }
 
-    /** Génère une référence d'opération unique de la forme OP-00001. */
     static String genererReference(jakarta.persistence.EntityManager em) {
         long maxId = em.createQuery("SELECT COALESCE(MAX(o.id), 0) FROM Operation o", Long.class).getSingleResult();
         return String.format("OP-%05d", maxId + 1);
     }
 
-    /**
-     * Valide le formulaire d'ouverture de compte.
-     */
     public Map<String, String> validerOuverture(String clientId, String type, String depotInitial) {
         Map<String, String> erreurs = ValidationUtil.nouvellesErreurs();
         ValidationUtil.requis(erreurs, "clientId", clientId, "Veuillez sélectionner un client.");
@@ -142,7 +125,6 @@ public class AccountService {
         return accountDAO.search(terme, type, statut, agenceId, clientId, page, size);
     }
 
-    /** Change le statut d'un compte (blocage / clôture / réactivation). */
     public Account changerStatut(Long id, CompteStatut nouveauStatut) {
         return GenericDAO.inTransaction(em -> {
             Account compte = em.find(Account.class, id);

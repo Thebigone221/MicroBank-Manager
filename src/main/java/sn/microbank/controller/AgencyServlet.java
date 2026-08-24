@@ -11,9 +11,6 @@ import sn.microbank.service.ServiceException;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Gestion des agences (Bonus 4) : liste, création, modification, suppression.
- */
 @WebServlet(urlPatterns = {"/agencies", "/agencies/*"})
 public class AgencyServlet extends HttpServlet {
 
@@ -119,7 +116,6 @@ public class AgencyServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/agencies/form.jsp").forward(request, response);
     }
 
-    // GET /agencies/delete?id=...
     private void supprimer(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         Long id = ServletUtil.id(request.getParameter("id"));

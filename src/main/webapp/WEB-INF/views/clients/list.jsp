@@ -13,7 +13,6 @@
 <div class="card">
     <div class="card-body">
 
-        <!-- Recherche : GET /clients?search=... -->
         <form method="get" action="${pageContext.request.contextPath}/clients" class="row g-2 mb-3">
             <div class="col-md-5">
                 <input type="text" class="form-control" name="search"
@@ -77,10 +76,9 @@
             </tbody>
         </table>
 
-        <!-- Pagination JPA -->
         <c:if test="${resultat.totalPages > 1}">
             <nav aria-label="Pagination des clients" class="d-flex justify-content-between align-items-center mt-3">
-                <span class="small text-muted">${resultat.total} client(s) — page ${resultat.page + 1} / ${resultat.totalPages}</span>
+                <span class="small text-muted">${resultat.total} client(s) - page ${resultat.page + 1} / ${resultat.totalPages}</span>
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item ${resultat.hasPrevious() ? '' : 'disabled'}">
                         <a class="page-link"

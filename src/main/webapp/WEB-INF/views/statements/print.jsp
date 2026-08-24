@@ -6,13 +6,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Relevé imprimable — ${releve.compte.numeroCompte}</title>
+    <title>Relevé imprimable - ${releve.compte.numeroCompte}</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body class="bg-light">
 
-<!-- Bonus 5 : version imprimable du relevé -->
 <div class="container py-4 print-area">
     <div class="card shadow-sm">
         <div class="card-body p-4">

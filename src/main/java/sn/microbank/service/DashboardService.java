@@ -12,18 +12,12 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Service du tableau de bord : statistiques globales simples.
- */
 public class DashboardService {
 
     private final ClientDAO clientDAO = new ClientDAO();
     private final AccountDAO accountDAO = new AccountDAO();
     private final OperationService operationService = new OperationService();
 
-    /**
-     * @return les chiffres clés affichés sur le tableau de bord.
-     */
     public Map<String, Object> statistiques() {
         LocalDateTime debutJour = LocalDateTime.now().toLocalDate().atStartOfDay();
 
@@ -36,7 +30,6 @@ public class DashboardService {
         stats.put("soldeTotal", accountDAO.sumSoldeActifs());
         stats.put("operationsDuJour", operationService.countDepuis(debutJour));
 
-        // Bonus 3 : statistiques supplémentaires
         Map<TypeCompte, Long> parType = accountDAO.countByType();
         stats.put("comptesCourant", parType.getOrDefault(TypeCompte.COURANT, 0L));
         stats.put("comptesEpargne", parType.getOrDefault(TypeCompte.EPARGNE, 0L));
@@ -46,7 +39,6 @@ public class DashboardService {
         stats.put("retraitsDuJour", totauxJour.retraits());
         stats.put("dernieresOperations", operationService.dernieres(8));
 
-        // Comptes bloqués à surveiller
         stats.put("comptesBloques", accountDAO.countByStatut(CompteStatut.BLOQUE));
 
         BigDecimal soldeTotal = (BigDecimal) stats.get("soldeTotal");

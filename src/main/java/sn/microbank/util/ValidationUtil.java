@@ -6,11 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * Validation des formulaires côté serveur.
- * Chaque méthode enregistre ses erreurs dans une Map (champ -> message)
- * que les JSP affichent à l'utilisateur.
- */
 public final class ValidationUtil {
 
     private static final Pattern EMAIL = Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[\\w.-]+$");
@@ -19,7 +14,6 @@ public final class ValidationUtil {
     private ValidationUtil() {
     }
 
-    /** Vérifie qu'une chaîne est présente (non nulle et non vide). */
     public static void requis(Map<String, String> erreurs, String champ, String valeur, String message) {
         if (valeur == null || valeur.isBlank()) {
             erreurs.put(champ, message);
@@ -38,10 +32,6 @@ public final class ValidationUtil {
         }
     }
 
-    /**
-     * Convertit un montant saisi en BigDecimal positif.
-     * Ajoute une erreur si la valeur est absente, non numérique ou <= 0.
-     */
     public static java.math.BigDecimal montantPositif(Map<String, String> erreurs, String champ, String valeur) {
         if (valeur == null || valeur.isBlank()) {
             erreurs.put(champ, "Le montant est obligatoire.");
@@ -60,7 +50,6 @@ public final class ValidationUtil {
         }
     }
 
-    /** Convertit une date ISO (yyyy-MM-dd) en LocalDate, ou null si vide/invalide. */
     public static LocalDate date(String valeur) {
         if (valeur == null || valeur.isBlank()) {
             return null;

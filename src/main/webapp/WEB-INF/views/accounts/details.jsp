@@ -28,7 +28,6 @@
 </div>
 
 <div class="row g-3 mb-3">
-    <!-- Informations du compte -->
     <div class="col-lg-5">
         <div class="card h-100">
             <div class="card-header bg-white fw-semibold"><i class="bi bi-info-circle me-2"></i>Informations</div>
@@ -46,7 +45,7 @@
                     <span class="text-muted">Date d'ouverture</span>${f:dateFr(compte.dateOuverture)}
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span class="text-muted">Agence</span>${not empty compte.agency ? compte.agency.nom : "—"}
+                    <span class="text-muted">Agence</span>${not empty compte.agency ? compte.agency.nom : "-"}
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="text-muted">Solde</span>
@@ -55,7 +54,6 @@
             </ul>
         </div>
 
-        <!-- Relevé PDF / Export CSV -->
         <div class="card mt-3">
             <div class="card-header bg-white fw-semibold"><i class="bi bi-file-earmark-text me-2"></i>Relevés</div>
             <div class="card-body">
@@ -89,7 +87,6 @@
         </div>
     </div>
 
-    <!-- Dernières opérations + raccourcis -->
     <div class="col-lg-7">
         <div class="card h-100">
             <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
@@ -130,7 +127,6 @@
             </table>
         </div>
 
-        <!-- Raccourcis opérations -->
         <div class="d-flex gap-2 mt-3">
             <a class="btn btn-success flex-fill ${compte.statut != 'ACTIF' ? 'disabled' : ''}"
                href="${pageContext.request.contextPath}/operations/deposit?accountId=${compte.id}">

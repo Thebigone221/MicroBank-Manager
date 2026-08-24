@@ -6,9 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Client de l'institution de microfinance.
- */
 @Entity
 @Table(name = "client",
        uniqueConstraints = @UniqueConstraint(name = "uk_client_numero_piece", columnNames = "numero_piece"))
@@ -39,7 +36,6 @@ public class Client {
     @Column(name = "numero_piece", nullable = false, length = 40)
     private String numeroPiece;
 
-    /** Chemin du fichier (copie de la pièce d'identité) uploadé — Bonus 1. */
     @Column(name = "piece_identite", length = 255)
     private String pieceIdentite;
 
@@ -50,7 +46,6 @@ public class Client {
     @Column(nullable = false, length = 10)
     private Statut statut;
 
-    /** Relation JPA : un client possède plusieurs comptes (1 --- *). */
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
 
@@ -60,8 +55,6 @@ public class Client {
     public String getNomComplet() {
         return prenom + " " + nom;
     }
-
-    // Getters / Setters
 
     public Long getId() {
         return id;

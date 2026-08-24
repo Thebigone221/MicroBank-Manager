@@ -9,12 +9,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
- * DAO générique fournissant le CRUD et une pagination réalisée en JPA
- * (setFirstResult / setMaxResults).
- *
- * @param <T> entité gérée
- */
 public abstract class GenericDAO<T> {
 
     private final Class<T> entityClass;
@@ -23,10 +17,6 @@ public abstract class GenericDAO<T> {
         this.entityClass = entityClass;
     }
 
-    /**
-     * Exécute une opération métier dans une transaction :
-     * l'EntityManager est créé puis fermé automatiquement.
-     */
     public static <R> R inTransaction(Function<EntityManager, R> travail) {
         try (EntityManager em = EMF.createEntityManager()) {
             EntityTransaction tx = em.getTransaction();
@@ -36,7 +26,7 @@ public abstract class GenericDAO<T> {
                 tx.commit();
                 return resultat;
             } catch (RuntimeException e) {
-                // Toute erreur provoque un ROLLBACK complet
+
                 if (tx.isActive()) {
                     tx.rollback();
                 }
@@ -45,7 +35,6 @@ public abstract class GenericDAO<T> {
         }
     }
 
-    /** Variante sans valeur de retour pour les traitements transactionnels. */
     public static void inTransactionVoid(Consumer<EntityManager> travail) {
         inTransaction(em -> {
             travail.accept(em);
@@ -53,7 +42,6 @@ public abstract class GenericDAO<T> {
         });
     }
 
-    /** Exécution en lecture seule (pas de transaction). */
     public static <R> R inRead(Function<EntityManager, R> lecture) {
         try (EntityManager em = EMF.createEntityManager()) {
             return lecture.apply(em);
@@ -64,7 +52,6 @@ public abstract class GenericDAO<T> {
         return inRead(em -> em.find(entityClass, id));
     }
 
-    /** Liste paginée de toutes les entités — pagination JPA obligatoire. */
     public List<T> findPage(int page, int size) {
         return inRead(em -> em.createQuery(
                         "SELECT e FROM " + entityClass.getSimpleName() + " e ORDER BY e.id DESC",
@@ -106,7 +93,6 @@ public abstract class GenericDAO<T> {
         });
     }
 
-    /** Construit une requête paginée (utilitaire partagé par les DAO fils). */
     protected static <R> TypedQuery<R> pagine(TypedQuery<R> query, int page, int size) {
         return query.setFirstResult(page * size).setMaxResults(size);
     }

@@ -20,10 +20,6 @@ import java.io.OutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-/**
- * Génération du relevé de compte PDF avec OpenPDF.
- * Contenu : client, compte, période, opérations, totaux, solde final.
- */
 public class StatementPdf {
 
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -42,7 +38,6 @@ public class StatementPdf {
             Account compte = releve.getCompte();
             Client client = compte.getClient();
 
-            // En-tête
             Paragraph titre = new Paragraph("MICROBANK", TITRE);
             titre.setAlignment(Element.ALIGN_CENTER);
             document.add(titre);
@@ -56,14 +51,13 @@ public class StatementPdf {
             document.add(new Paragraph("Compte  : " + compte.getNumeroCompte(), CELLULE));
             document.add(new Paragraph("Type    : " + traduireType(compte.getType()), CELLULE));
             document.add(new Paragraph("Agence  : "
-                    + (compte.getAgency() != null ? compte.getAgency().getNom() : "—"), CELLULE));
+                    + (compte.getAgency() != null ? compte.getAgency().getNom() : "-"), CELLULE));
             document.add(new Paragraph("Statut  : " + compte.getStatut(), CELLULE));
             Paragraph periode = new Paragraph("Période : " + releve.getPeriodeAffichee(), CELLULE);
             periode.setSpacingBefore(6);
             periode.setSpacingAfter(10);
             document.add(periode);
 
-            // Tableau des opérations
             PdfPTable table = new PdfPTable(new float[]{2f, 1.8f, 1.5f, 2.2f, 3.5f});
             table.setWidthPercentage(100);
             ajouterEntete(table, "Date", "Référence", "Type", "Montant (FCFA)", "Description");
@@ -85,7 +79,6 @@ public class StatementPdf {
             }
             document.add(table);
 
-            // Totaux
             document.add(espace());
             PdfPTable totaux = new PdfPTable(new float[]{6f, 4f});
             totaux.setWidthPercentage(100);
@@ -93,7 +86,6 @@ public class StatementPdf {
             total(totaux, "Total des retraits", releve.getTotalRetraits());
             document.add(totaux);
 
-            // Solde final
             Paragraph solde = new Paragraph(
                     "Solde du compte au " + java.time.LocalDate.now().format(DATE) + " : "
                             + String.format(Locale.FRANCE, "%,.0f FCFA",

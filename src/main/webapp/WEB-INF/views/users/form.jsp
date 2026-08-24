@@ -57,7 +57,7 @@
                             <label for="role" class="form-label">Rôle <span class="text-danger">*</span></label>
                             <select name="role" id="role"
                                     class="form-select ${not empty erreurs['role'] ? 'is-invalid' : ''}" required>
-                                <option value="">— Choisir —</option>
+                                <option value="">- Choisir -</option>
                                 <option value="AGENT" ${(empty valeurs['role'] and userEdit.role == 'AGENT') or valeurs['role'] == 'AGENT' ? 'selected' : ''}>
                                     Agent
                                 </option>
@@ -81,7 +81,6 @@
                                 </c:otherwise>
                             </c:choose>
                         </label>
-                        <!-- Le mot de passe n'est jamais réaffiché (contrainte du sujet). -->
                         <input type="password" id="motDePasse" name="motDePasse"
                                class="form-control ${not empty erreurs['motDePasse'] ? 'is-invalid' : ''}"
                                ${modeEdition ? '' : 'required'} minlength="6" placeholder="6 caractères minimum">

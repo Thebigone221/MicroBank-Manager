@@ -23,7 +23,6 @@
                     </div>
                 </c:if>
 
-                <!-- POST /clients/create ou /clients/update -->
                 <form method="post" action="${actionFormulaire}" novalidate>
                     <c:if test="${modeEdition}">
                         <input type="hidden" name="id" value="${client.id}">

@@ -10,18 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-/**
- * Service de gestion des clients : validations métier + CRUD.
- */
 public class ClientService {
 
     private final ClientDAO clientDAO = new ClientDAO();
 
-    /**
-     * Valide les champs d'un formulaire client.
-     *
-     * @return la Map des erreurs (vide si tout est correct)
-     */
     public Map<String, String> valider(String nom, String prenom, String dateNaissance,
                                        String telephone, String email, String numeroPiece) {
         Map<String, String> erreurs = ValidationUtil.nouvellesErreurs();
@@ -71,7 +63,6 @@ public class ClientService {
         client.setNumeroPiece(v.get("numeroPiece").trim());
     }
 
-    /** Mise à jour directe sans passer par le formulaire complet (ex : après upload). */
     public void modifierSansValidation(Client client) {
         clientDAO.update(client);
     }
@@ -81,7 +72,7 @@ public class ClientService {
         if (client == null) {
             throw new ServiceException("Client introuvable.");
         }
-        // Un client ayant des comptes ne peut pas être supprimé : on le désactive.
+
         if (!client.getAccounts().isEmpty()) {
             throw new ServiceException(
                     "Impossible de supprimer ce client : il possède des comptes. Désactivez-le plutôt.");
@@ -97,7 +88,6 @@ public class ClientService {
         return clientDAO.existsNumeroPiece(numeroPiece, idExclu);
     }
 
-    /** Liste paginée avec recherche multi-critères. */
     public PagedResult<Client> lister(String terme, Statut statut, int page, int size) {
         return clientDAO.search(terme, statut, page, size);
     }

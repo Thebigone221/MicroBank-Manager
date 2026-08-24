@@ -4,7 +4,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Page introuvable — MicroBank</title>
+    <title>Page introuvable - MicroBank</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css">
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center" style="min-height:100vh">

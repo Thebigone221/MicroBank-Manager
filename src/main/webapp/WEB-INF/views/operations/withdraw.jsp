@@ -26,7 +26,6 @@
                     </div>
                 </div>
 
-                <!-- POST /operations/withdraw -->
                 <form method="post"
                       action="${pageContext.request.contextPath}/operations/withdraw?accountId=${compte.id}">
                     <input type="hidden" name="accountId" value="${compte.id}">

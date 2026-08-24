@@ -13,17 +13,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Sert la copie de la pièce d'identité uploadée pour un client (Bonus 1).
- * GET /documents/client/{id}
- */
 @WebServlet("/documents/*")
 public class DocumentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String info = request.getPathInfo(); // /client/{id}
+        String info = request.getPathInfo();
         if (info == null || !info.startsWith("/client/")) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;

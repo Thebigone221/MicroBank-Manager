@@ -10,9 +10,6 @@ import sn.microbank.util.ValidationUtil;
 
 import java.util.Map;
 
-/**
- * Service de gestion des utilisateurs (réservé à l'administrateur).
- */
 public class UserService {
 
     private final UserDAO userDAO = new UserDAO();
@@ -53,7 +50,6 @@ public class UserService {
             throw new ServiceException("Ce login est déjà utilisé par un autre utilisateur.");
         }
 
-        // Un administrateur ne peut pas se retirer lui-même son rôle s'il est le seul admin.
         if (user.getRole() == Role.ADMIN && !Role.ADMIN.name().equals(roleStr)
                 && compterAdminsActifs() <= 1) {
             throw new ServiceException("Impossible : au moins un administrateur actif est requis.");
@@ -79,7 +75,6 @@ public class UserService {
                 .count();
     }
 
-    /** Active ou désactive un utilisateur. */
     public User basculerStatut(Long id) {
         User user = userDAO.findById(id);
         if (user == null) {

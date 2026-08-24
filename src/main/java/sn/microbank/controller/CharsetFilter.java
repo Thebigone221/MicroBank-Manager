@@ -5,9 +5,6 @@ import jakarta.servlet.*;
 
 import java.io.IOException;
 
-/**
- * Force l'encodage UTF-8 de toutes les requêtes (accents dans les formulaires).
- */
 @WebFilter(filterName = "CharsetFilter", urlPatterns = "/*")
 public class CharsetFilter implements Filter {
 

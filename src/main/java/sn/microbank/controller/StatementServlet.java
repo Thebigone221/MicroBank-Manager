@@ -13,12 +13,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
-/**
- * Génération du relevé d'un compte :
- * - GET /statements/pdf  : téléchargement du relevé PDF
- * - GET /statements/csv  : export CSV de l'historique (filtres conservés)
- * - GET /statements/print : version imprimable HTML (Bonus 5)
- */
 @WebServlet(urlPatterns = {"/statements/pdf", "/statements/csv", "/statements/print"})
 public class StatementServlet extends HttpServlet {
 
@@ -73,7 +67,6 @@ public class StatementServlet extends HttpServlet {
         response.setHeader("Content-Disposition",
                 "attachment; filename=\"" + URLEncoder.encode(nomFichier, StandardCharsets.UTF_8) + "\"");
 
-        // BOM UTF-8 pour que Excel reconnaisse l'encodage.
         var sortie = response.getWriter();
         sortie.write('\uFEFF');
         sortie.write(contenu);

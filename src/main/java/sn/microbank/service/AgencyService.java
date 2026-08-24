@@ -6,9 +6,6 @@ import sn.microbank.model.Agency;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * Service de gestion des agences (Bonus 4).
- */
 public class AgencyService {
 
     private static final Pattern CODE_VALIDE = Pattern.compile("^[A-Za-z0-9]{2,10}$");
@@ -48,7 +45,6 @@ public class AgencyService {
         return agencyDAO.update(agence);
     }
 
-    /** Une agence ne peut être supprimée que si aucun compte n'y est rattaché. */
     public void supprimer(Long id) {
         Agency agence = agencyDAO.findById(id);
         if (agence == null) {

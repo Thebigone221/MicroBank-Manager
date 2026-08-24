@@ -20,11 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-/**
- * Opérations bancaires : dépôt, retrait, virement + historique filtré et paginé.
- * Les routes correspondent exactement à celles du sujet :
- * POST /operations/deposit, POST /operations/withdraw, POST /operations/transfer.
- */
 @WebServlet(urlPatterns = {"/operations", "/operations/*"})
 public class OperationServlet extends HttpServlet {
 
@@ -56,9 +51,6 @@ public class OperationServlet extends HttpServlet {
         }
     }
 
-    // ------------------------------------------------------------------
-    // GET /operations?accountId=...&type=&du=&au=&min=&max=&page=&size=
-    // ------------------------------------------------------------------
     private void historique(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Long accountId = ServletUtil.id(request.getParameter("accountId"));
@@ -81,7 +73,7 @@ public class OperationServlet extends HttpServlet {
             request.setAttribute("compte", accountService.findById(accountId));
         }
         request.setAttribute("resultat", resultat);
-        // On repasse les filtres à la JSP pour les conserver dans la pagination et l'export CSV.
+
         request.setAttribute("filtreType", paramOuVide(request, "type"));
         request.setAttribute("filtreDu", paramOuVide(request, "du"));
         request.setAttribute("filtreAu", paramOuVide(request, "au"));
@@ -91,9 +83,6 @@ public class OperationServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/operations/list.jsp").forward(request, response);
     }
 
-    // ------------------------------------------------------------------
-    // GET formulaire + POST traitement des trois types d'opération
-    // ------------------------------------------------------------------
     private void depot(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         Long accountId = ServletUtil.id(request.getParameter("accountId"));
@@ -210,7 +199,6 @@ public class OperationServlet extends HttpServlet {
                 .forward(request, response);
     }
 
-    /** Charge la liste des comptes actifs pour les listes déroulantes. */
     private void preparerFormulaireVirement(HttpServletRequest request, Long sourceId,
                                             Long destinationId, String montant,
                                             Map<String, String> erreurs) {

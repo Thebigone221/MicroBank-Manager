@@ -31,7 +31,6 @@
             </div>
         </form>
 
-        <!-- Les mots de passe ne sont jamais affichés dans les JSP (contrainte du sujet). -->
         <table class="table table-microbank table-hover align-middle">
             <thead>
             <tr>
@@ -78,7 +77,7 @@
         <c:if test="${resultat.totalPages > 1}">
             <nav aria-label="Pagination des utilisateurs"
                  class="d-flex justify-content-between align-items-center mt-3">
-                <span class="small text-muted">${resultat.total} utilisateur(s) — page ${resultat.page + 1} / ${resultat.totalPages}</span>
+                <span class="small text-muted">${resultat.total} utilisateur(s) - page ${resultat.page + 1} / ${resultat.totalPages}</span>
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item ${resultat.hasPrevious() ? '' : 'disabled'}">
                         <a class="page-link"

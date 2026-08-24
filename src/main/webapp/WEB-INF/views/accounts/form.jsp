@@ -16,14 +16,13 @@
                     </div>
                 </c:if>
 
-                <!-- POST /accounts/create -->
                 <form method="post" action="${pageContext.request.contextPath}/accounts/create">
 
                     <div class="mb-3">
                         <label for="clientId" class="form-label">Client <span class="text-danger">*</span></label>
                         <select name="clientId" id="clientId"
                                 class="form-select ${not empty erreurs['clientId'] ? 'is-invalid' : ''}" required>
-                            <option value="">— Sélectionner un client —</option>
+                            <option value="">- Sélectionner un client -</option>
                             <c:forEach var="client" items="${clients}">
                                 <option value="${client.id}"
                                         ${valeurs['clientId'] eq String.valueOf(client.id) or clientIdSelectionne eq String.valueOf(client.id) ? 'selected' : ''}>
@@ -59,10 +58,10 @@
                         <div class="col-md-6 mb-3">
                             <label for="agenceId" class="form-label">Agence</label>
                             <select name="agenceId" id="agenceId" class="form-select">
-                                <option value="">— Aucune —</option>
+                                <option value="">- Aucune -</option>
                                 <c:forEach var="agence" items="${agences}">
                                     <option value="${agence.id}" ${valeurs['agenceId'] eq String.valueOf(agence.id) ? 'selected' : ''}>
-                                            ${agence.code} — ${agence.nom}
+                                            ${agence.code} - ${agence.nom}
                                     </option>
                                 </c:forEach>
                             </select>

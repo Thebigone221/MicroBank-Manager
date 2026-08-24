@@ -13,14 +13,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * Construit les données d'un relevé de compte pour une période donnée.
- */
 public class StatementService {
 
     private static final DateTimeFormatter FORMAT_FR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    /** Données complètes d'un relevé (classe classique : lisible en EL depuis les JSP). */
     public static class Releve {
 
         private final Account compte;
@@ -65,13 +61,12 @@ public class StatementService {
             return totalRetraits;
         }
 
-        /** Période affichée sous forme lisible ("Historique complet" ou "dd/MM/yyyy - dd/MM/yyyy"). */
         public String getPeriodeAffichee() {
             if (du == null && au == null) {
                 return "Historique complet";
             }
-            String d = du == null ? "—" : du.toLocalDate().format(FORMAT_FR);
-            String f = au == null ? "—" : au.toLocalDate().format(FORMAT_FR);
+            String d = du == null ? "-" : du.toLocalDate().format(FORMAT_FR);
+            String f = au == null ? "-" : au.toLocalDate().format(FORMAT_FR);
             return d + " - " + f;
         }
     }
@@ -79,11 +74,6 @@ public class StatementService {
     private final OperationService operationService = new OperationService();
     private final AccountDAO accountDAO = new AccountDAO();
 
-    /**
-     * @param accountId  identifiant du compte (obligatoire)
-     * @param dateDu     borne inférieure (inclusive), peut être null
-     * @param dateAu     borne supérieure (inclusive), peut être null
-     */
     public Releve construire(Long accountId, LocalDate dateDu, LocalDate dateAu) {
         Account compte = accountDAO.findById(accountId);
         if (compte == null) {
@@ -101,12 +91,6 @@ public class StatementService {
         return new Releve(compte, du, au, operations, totaux.depots(), totaux.retraits());
     }
 
-    /**
-     * Génère une ligne CSV par opération :
-     * Date;Reference;Type;Montant;Description
-     *
-     * @return le contenu complet du fichier CSV (avec en-têtes)
-     */
     public String exporterCsv(Releve releve) {
         StringBuilder csv = new StringBuilder();
         csv.append("Date;Reference;Type;Montant;Description\n");
@@ -118,11 +102,10 @@ public class StatementService {
                .append(signeMontant(op)).append(';')
                .append(nettoyer(op.getDescription())).append('\n');
         }
-        // BOM UTF-8 ajouté par la servlet pour compatibilité Excel.
+
         return csv.toString();
     }
 
-    /** Montant préfixé du signe selon le sens de l'opération (+100000 / -20000). */
     public static String signeMontant(Operation op) {
         String signe = op.getType() == TypeOperation.RETRAIT
                 || (op.getType() == TypeOperation.VIREMENT && op.getCompteDestination() == null)

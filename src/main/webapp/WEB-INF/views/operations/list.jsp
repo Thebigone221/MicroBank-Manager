@@ -18,7 +18,6 @@
 
 <div class="card mb-3">
     <div class="card-body">
-        <!-- Filtres : GET /operations?type=&du=&au=&min=&max= -->
         <form method="get" action="${pageContext.request.contextPath}/operations" class="row g-2 align-items-end">
             <input type="hidden" name="accountId" value="${param.accountId}">
             <div class="col-md-2">
@@ -96,7 +95,7 @@
         <c:if test="${resultat.totalPages > 1}">
             <nav aria-label="Pagination des opérations"
                  class="d-flex justify-content-between align-items-center mt-2">
-                <span class="small text-muted">${resultat.total} opération(s) — page ${resultat.page + 1} / ${resultat.totalPages}</span>
+                <span class="small text-muted">${resultat.total} opération(s) - page ${resultat.page + 1} / ${resultat.totalPages}</span>
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item ${resultat.hasPrevious() ? '' : 'disabled'}">
                         <a class="page-link"

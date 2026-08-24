@@ -1,4 +1,4 @@
-# MicroBank Manager — Documentation fonctionnelle et technique
+# MicroBank Manager - Documentation fonctionnelle et technique
 
 ## 1. Présentation
 
@@ -84,7 +84,7 @@ Règles de gestion :
 2. Un retrait exige un solde suffisant.
 3. Un virement exige deux comptes distincts, tous deux ACTIFS, et un solde suffisant.
 4. Chaque opération met à jour **les soldes et l'historique en une transaction** :
-   en cas d'erreur, tout est annulé (`rollback`) — impossible d'avoir un compte
+   en cas d'erreur, tout est annulé (`rollback`) - impossible d'avoir un compte
    débité sans crédit correspondant.
 
 Chaque opération enregistre sa référence unique (`OP-00001`, …), son type, son montant,

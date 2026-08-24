@@ -2,9 +2,6 @@ package sn.microbank.controller;
 
 import jakarta.servlet.http.HttpSession;
 
-/**
- * Messages flash stockés en session : affichés une fois puis supprimés.
- */
 public final class Flash {
 
     public static final String SUCCESS = "flashSuccess";

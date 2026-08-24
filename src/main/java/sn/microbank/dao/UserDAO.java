@@ -5,9 +5,6 @@ import sn.microbank.model.User;
 
 import java.util.Optional;
 
-/**
- * DAO de l'entité User.
- */
 public class UserDAO extends GenericDAO<User> {
 
     public UserDAO() {

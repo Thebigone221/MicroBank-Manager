@@ -18,21 +18,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-/**
- * Gestion des clients : liste + recherche + pagination, création,
- * modification, suppression, détails et upload de la pièce d'identité.
- */
 @WebServlet(urlPatterns = {"/clients", "/clients/*"})
-@MultipartConfig(maxFileSize = 5 * 1024 * 1024) // Bonus 1 : pièce d'identité <= 5 Mo
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class ClientServlet extends HttpServlet {
 
-    /** Répertoire de stockage des pièces d'identité uploadées (hors webapp). */
     static final Path REPERTOIRE_UPLOADS = Paths.get(
             System.getProperty("user.home"), "microbank-uploads");
 
     private final ClientService clientService = new ClientService();
 
-    /** Chemin complet de la requête : servletPath + pathInfo (ex : /clients/details). */
     private static String chemin(HttpServletRequest request) {
         return request.getServletPath()
                 + (request.getPathInfo() == null ? "" : request.getPathInfo());
@@ -63,9 +57,6 @@ public class ClientServlet extends HttpServlet {
         }
     }
 
-    // ------------------------------------------------------------------
-    // GET /clients?search=...&statut=...&page=0&size=10
-    // ------------------------------------------------------------------
     private void lister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String recherche = request.getParameter("search");
@@ -88,9 +79,6 @@ public class ClientServlet extends HttpServlet {
         }
     }
 
-    // ------------------------------------------------------------------
-    // GET /clients/create (nouveau client) et /clients/edit?id=...
-    // ------------------------------------------------------------------
     private void formulaire(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter("id");
@@ -103,15 +91,12 @@ public class ClientServlet extends HttpServlet {
             }
             request.setAttribute("client", client);
         }
-        // Valeurs resaisées après une erreur de validation.
+
         request.setAttribute("valeurs", request.getAttribute("valeurs"));
         request.setAttribute("erreurs", request.getAttribute("erreurs"));
         request.getRequestDispatcher("/WEB-INF/views/clients/form.jsp").forward(request, response);
     }
 
-    // ------------------------------------------------------------------
-    // POST /clients/create
-    // ------------------------------------------------------------------
     private void creer(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         Map<String, String> valeurs = lireFormulaire(request);
@@ -137,9 +122,6 @@ public class ClientServlet extends HttpServlet {
         }
     }
 
-    // ------------------------------------------------------------------
-    // POST /clients/update
-    // ------------------------------------------------------------------
     private void modifier(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         Long id = ServletUtil.id(request.getParameter("id"));
@@ -172,9 +154,6 @@ public class ClientServlet extends HttpServlet {
         }
     }
 
-    // ------------------------------------------------------------------
-    // GET /clients/delete?id=...
-    // ------------------------------------------------------------------
     private void supprimer(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         HttpSession session = request.getSession();
@@ -195,9 +174,6 @@ public class ClientServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/clients");
     }
 
-    // ------------------------------------------------------------------
-    // GET /clients/details?id=...
-    // ------------------------------------------------------------------
     private void details(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Long id = ServletUtil.id(request.getParameter("id"));
@@ -211,9 +187,6 @@ public class ClientServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/clients/details.jsp").forward(request, response);
     }
 
-    // ------------------------------------------------------------------
-    // POST /clients/upload?id=...   (Bonus 1 : copie de la pièce d'identité)
-    // ------------------------------------------------------------------
     private void uploader(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         HttpSession session = request.getSession();
@@ -251,7 +224,7 @@ public class ClientServlet extends HttpServlet {
     }
 
     private Map<String, String> lireFormulaire(HttpServletRequest request) {
-        Map<String, String> valeurs = ValidationUtil.nouvellesErreurs(); // réutilise la Map<String,String>
+        Map<String, String> valeurs = ValidationUtil.nouvellesErreurs();
         valeurs.put("nom", parametre(request, "nom"));
         valeurs.put("prenom", parametre(request, "prenom"));
         valeurs.put("dateNaissance", parametre(request, "dateNaissance"));

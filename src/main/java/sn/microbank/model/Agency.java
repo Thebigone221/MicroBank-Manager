@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Agence de l'institution — Bonus 4 : les comptes sont rattachés aux agences.
- */
 @Entity
 @Table(name = "agency",
        uniqueConstraints = @UniqueConstraint(name = "uk_agency_code", columnNames = "code"))
@@ -36,8 +33,6 @@ public class Agency {
         this.nom = nom;
         this.ville = ville;
     }
-
-    // Getters / Setters
 
     public Long getId() {
         return id;

@@ -9,7 +9,6 @@
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <!-- Entités gérées par l'unité de persistance -->
         <class>sn.microbank.model.User</class>
         <class>sn.microbank.model.Client</class>
         <class>sn.microbank.model.Account</class>
@@ -17,14 +16,12 @@
         <class>sn.microbank.model.Agency</class>
 
         <properties>
-            <!-- Connexion MySQL -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:mysql://localhost:3306/microbank?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
             <property name="jakarta.persistence.jdbc.user" value="microbank"/>
             <property name="jakarta.persistence.jdbc.password" value="microbank123"/>
 
-            <!-- Comportement Hibernate -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="false"/>

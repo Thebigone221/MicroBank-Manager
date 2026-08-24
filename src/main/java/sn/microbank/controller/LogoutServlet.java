@@ -9,9 +9,6 @@ import sn.microbank.model.User;
 
 import java.io.IOException;
 
-/**
- * Déconnexion : invalidation complète de la session HTTP.
- */
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 

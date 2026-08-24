@@ -21,7 +21,6 @@
 </div>
 
 <div class="row g-3">
-    <!-- Fiche client -->
     <div class="col-lg-5">
         <div class="card h-100">
             <div class="card-header bg-white fw-semibold"><i class="bi bi-info-circle me-2"></i>Fiche client</div>
@@ -53,7 +52,6 @@
             </ul>
         </div>
 
-        <!-- Bonus 1 : copie de la pièce d'identité -->
         <div class="card mt-3">
             <div class="card-header bg-white fw-semibold">
                 <i class="bi bi-file-earmark-image me-2"></i>Pièce d'identité
@@ -81,7 +79,6 @@
         </div>
     </div>
 
-    <!-- Comptes du client -->
     <div class="col-lg-7">
         <div class="card h-100">
             <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">

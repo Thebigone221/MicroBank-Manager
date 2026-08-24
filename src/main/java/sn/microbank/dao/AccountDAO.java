@@ -10,16 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * DAO de l'entité Account.
- */
 public class AccountDAO extends GenericDAO<Account> {
 
     public AccountDAO() {
         super(Account.class);
     }
 
-    /** Liste paginée des comptes, avec filtres optionnels (recherche, type, statut, agence). */
     public PagedResult<Account> search(String terme, TypeCompte type, CompteStatut statut,
                                        Long agenceId, Long clientId, int page, int size) {
         StringBuilder where = new StringBuilder(" WHERE 1 = 1");
@@ -93,7 +89,6 @@ public class AccountDAO extends GenericDAO<Account> {
                 .getSingleResult());
     }
 
-    /** Nombre de comptes par type (tableau de bord amélioré — Bonus 3). */
     public Map<TypeCompte, Long> countByType() {
         return inRead(em -> {
             Map<TypeCompte, Long> resultat = new HashMap<>();

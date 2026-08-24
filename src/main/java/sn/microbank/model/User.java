@@ -3,9 +3,6 @@ package sn.microbank.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * Utilisateur de l'application (agent ou administrateur).
- */
 @Entity
 @Table(name = "app_user",
        uniqueConstraints = @UniqueConstraint(name = "uk_user_login", columnNames = "login"))
@@ -24,7 +21,6 @@ public class User {
     @Column(nullable = false, length = 40)
     private String login;
 
-    /** Mot de passe hashé en SHA-256 : jamais stocké ni affiché en clair. */
     @Column(name = "mot_de_passe", nullable = false, length = 64)
     private String motDePasse;
 
@@ -52,12 +48,9 @@ public class User {
         this.dateCreation = LocalDateTime.now();
     }
 
-    /** Nom complet affichable. */
     public String getNomComplet() {
         return prenom + " " + nom;
     }
-
-    // Getters / Setters
 
     public Long getId() {
         return id;

@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Connexion — MicroBank Manager</title>
+    <title>Connexion - MicroBank Manager</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
@@ -38,7 +38,6 @@
             </div>
         </c:if>
 
-        <!-- Formulaire envoyé à la servlet /login -->
         <form method="post" action="${pageContext.request.contextPath}/login">
             <div class="mb-3">
                 <label for="login" class="form-label">Login</label>
@@ -58,7 +57,7 @@
 
         <hr>
         <p class="text-center small text-muted mb-0">
-            Compte de test : admin / admin123 — agent / agent123
+            Compte de test : admin / admin123 - agent / agent123
         </p>
     </div>
 </div>

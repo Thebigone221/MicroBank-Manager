@@ -7,19 +7,10 @@ import sn.microbank.util.HashUtil;
 
 import java.util.Optional;
 
-/**
- * Service d'authentification : vérifie le login et le mot de passe hashé.
- */
 public class AuthService {
 
     private final UserDAO userDAO = new UserDAO();
 
-    /**
-     * Authentifie un utilisateur.
-     *
-     * @return l'utilisateur authentifié
-     * @throws ServiceException si les identifiants sont incorrects ou si le compte est désactivé
-     */
     public User login(String login, String motDePasse) {
         if (login == null || login.isBlank() || motDePasse == null || motDePasse.isBlank()) {
             throw new ServiceException("Veuillez saisir votre login et votre mot de passe.");

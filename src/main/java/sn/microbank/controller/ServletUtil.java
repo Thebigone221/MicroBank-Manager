@@ -2,10 +2,6 @@ package sn.microbank.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * Utilitaires communs aux servlets : lecture des paramètres de pagination,
- * conversion d'identifiants, etc.
- */
 public final class ServletUtil {
 
     public static final int DEFAULT_PAGE_SIZE = 10;
@@ -14,12 +10,10 @@ public final class ServletUtil {
     private ServletUtil() {
     }
 
-    /** Numéro de page (base 0), protégé contre les valeurs invalides. */
     public static int page(HttpServletRequest request) {
         return Math.max(0, entier(request.getParameter("page"), 0));
     }
 
-    /** Taille de page bornée entre 1 et 100. */
     public static int size(HttpServletRequest request) {
         int size = entier(request.getParameter("size"), DEFAULT_PAGE_SIZE);
         if (size < 1) {
@@ -28,7 +22,6 @@ public final class ServletUtil {
         return Math.min(size, MAX_PAGE_SIZE);
     }
 
-    /** Identifiant technique ou null si absent/invalide. */
     public static Long id(String valeur) {
         try {
             return valeur == null || valeur.isBlank() ? null : Long.valueOf(valeur.trim());
@@ -45,7 +38,6 @@ public final class ServletUtil {
         }
     }
 
-    /** Reconstruit la chaîne de requête en préservant recherche + tri (pour les liens de pagination). */
     public static String queryString(HttpServletRequest request, String... exclusions) {
         StringBuilder sb = new StringBuilder();
         request.getParameterMap().forEach((nom, valeurs) -> {

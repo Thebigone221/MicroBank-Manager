@@ -7,7 +7,7 @@ Application web de gestion pour une institution de microfinance, développée en
 - **Authentification sécurisée** : mots de passe hachés SHA-256, sessions HTTP, rôles ADMIN / AGENT
 - **Clients** : création, modification, recherche multi-critères, pagination, activation/désactivation
 - **Comptes** : ouverture avec dépôt initial atomique, blocage/clôture, filtres par type/statut/agence
-- **Opérations** : dépôts, retraits, virements — chaque opération est **une transaction unique** (tout ou rien), contrôle du solde et du statut du compte
+- **Opérations** : dépôts, retraits, virements - chaque opération est **une transaction unique** (tout ou rien), contrôle du solde et du statut du compte
 - **Relevés de compte** : PDF (OpenPDF), export CSV compatible Excel, version imprimable
 - **Bonus** : upload de la pièce d'identité (5 Mo max), filtre combiné des opérations, tableau de bord enrichi avec statistiques, gestion des agences rattachées aux comptes, relevé imprimable
 
@@ -91,4 +91,4 @@ La documentation fonctionnelle et technique complète se trouve dans [`docs/docu
 
 ## Auteur
 
-Projet de fin de module — Développement Web (Java EE).
+Projet de fin de module - Développement Web (Java EE).

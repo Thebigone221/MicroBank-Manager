@@ -15,10 +15,6 @@ import sn.microbank.service.ServiceException;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Gestion des comptes : liste + recherche, ouverture, détails,
- * changement de statut (blocage / clôture).
- */
 @WebServlet(urlPatterns = {"/accounts", "/accounts/*"})
 public class AccountServlet extends HttpServlet {
 
@@ -48,7 +44,6 @@ public class AccountServlet extends HttpServlet {
         }
     }
 
-    // GET /accounts?search=&type=&statut=&agenceId=&page=&size=
     private void lister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int page = ServletUtil.page(request);
@@ -68,12 +63,11 @@ public class AccountServlet extends HttpServlet {
         request.setAttribute("statutFiltre", paramOuVide(request, "statut"));
         request.setAttribute("agenceFiltre", paramOuVide(request, "agenceId"));
         request.setAttribute("clientIdFiltre", paramOuVide(request, "clientId"));
-        // Pour le filtre par agence et la liste déroulante d'ouverture
+
         request.setAttribute("agences", accountService.toutesAgences());
         request.getRequestDispatcher("/WEB-INF/views/accounts/list.jsp").forward(request, response);
     }
 
-    // GET /accounts/create?clientId=...  : formulaire d'ouverture
     private void formulaireCreation(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String clientId = paramOuVide(request, "clientId");
@@ -86,7 +80,6 @@ public class AccountServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/accounts/form.jsp").forward(request, response);
     }
 
-    // POST /accounts/create
     private void creer(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User agent = utilisateurConnecte(request);
@@ -117,7 +110,6 @@ public class AccountServlet extends HttpServlet {
         }
     }
 
-    // GET /accounts/details?id=...
     private void details(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Long id = ServletUtil.id(request.getParameter("id"));
@@ -128,7 +120,6 @@ public class AccountServlet extends HttpServlet {
             return;
         }
 
-        // Dernières opérations du compte (5 plus récentes), via JPA.
         var historique = new sn.microbank.service.OperationService()
                 .historique(id, null, null, null, null, null, null, null, 0, 5);
 
@@ -137,7 +128,6 @@ public class AccountServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/accounts/details.jsp").forward(request, response);
     }
 
-    // GET /accounts/statut?id=...&statut=BLOQUE|ACTIF|CLOTURE
     private void changerStatut(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         var session = request.getSession();

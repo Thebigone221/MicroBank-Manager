@@ -2,10 +2,6 @@ package sn.microbank.dao;
 
 import java.util.List;
 
-/**
- * Résultat paginé générique : une page d'éléments + les informations
- * nécessaires à l'affichage des liens de pagination dans les JSP.
- */
 public class PagedResult<T> {
 
     private final List<T> items;
@@ -28,7 +24,6 @@ public class PagedResult<T> {
         return total;
     }
 
-    /** Numéro de la page courante (base 0). */
     public int getPage() {
         return page;
     }
@@ -37,7 +32,6 @@ public class PagedResult<T> {
         return size;
     }
 
-    /** Nombre total de pages (au moins 1 pour simplifier l'affichage). */
     public int getTotalPages() {
         return Math.max(1, (int) Math.ceil((double) total / size));
     }

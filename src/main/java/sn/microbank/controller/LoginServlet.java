@@ -11,11 +11,6 @@ import sn.microbank.service.AuthService;
 
 import java.io.IOException;
 
-/**
- * Authentification : affiche le formulaire (GET) et connecte l'utilisateur (POST).
- * La connexion s'appuie sur HttpSession comme demandé dans le sujet :
- * session.setAttribute("user", user);
- */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -24,7 +19,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Déjà connecté -> tableau de bord directement.
+
         if (request.getSession(false) != null && request.getSession(false).getAttribute("user") != null) {
             response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
