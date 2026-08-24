@@ -1,60 +1,61 @@
 # MicroBank Manager - Documentation fonctionnelle et technique
 
-## 1. Présentation
+Cette note décrit ce que fait l'application, comment c'est construit, et pourquoi. Le README couvre l'installation ; ici on rentre dans le détail.
 
-MicroBank Manager est une application web destinée aux institutions de microfinance.
-Elle permet de gérer les clients, leurs comptes (courant / épargne), les opérations
-(dépôts, retraits, virements) et d'éditer des relevés de compte au format PDF ou CSV.
+## 1. De quoi il s'agit
 
-L'application respecte le pattern **MVC** :
+Une application web pour le guichet d'une institution de microfinance : inscrire des clients, ouvrir et gérer leurs comptes (courant ou épargne), enregistrer dépôts, retraits et virements, et sortir un relevé de compte propre quand le client en demande un.
 
-| Couche | Rôle | Technologies |
-|---|---|---|
-| Modèle | Entités persistantes | JPA 3.1 / Hibernate 6.5 |
-| Vue | Affichage | JSP + JSTL 3.0 + Bootstrap 5.3 |
-| Contrôleur | Routage et orchestration | Servlets Jakarta EE 10 |
+Côté architecture, j'ai suivi le pattern MVC demandé, avec une séparation stricte entre les couches :
 
-Les accès à la base passent exclusivement par des **DAO** ; toute la logique métier
-(transactions, règles de gestion) est concentrée dans la couche **Service**.
+- les **servlets** reçoivent les requêtes, valident la saisie et choisissent la vue ;
+- les **services** portent les règles de gestion et ouvrent les transactions ;
+- les **DAO** parlent à la base via JPA, rien d'autre ;
+- les **JSP** affichent, elles ne calculent rien de métier.
 
-## 2. Acteurs et sécurité
+Les vues ne touchent jamais à l'EntityManager. C'est la règle que je me suis fixée dès le départ et elle a payé quand il a fallu changer des règles métier sans toucher aux JSP.
 
-### Rôles
+## 2. Qui peut faire quoi
 
-- **ADMIN** : toutes les fonctions + gestion des utilisateurs et des agences.
-- **AGENT** : clients, comptes, opérations, relevés.
+Deux rôles seulement, ça suffit pour ce périmètre :
 
-### Mécanismes de sécurité
+- **ADMIN** : tout, plus la gestion des utilisateurs du système et des agences ;
+- **AGENT** : le quotidien du guichet, clients, comptes, opérations, relevés.
 
-- Mots de passe **jamais stockés en clair** : hachage SHA-256 à la création.
-- Session HTTP : `AuthFilter` intercepte toutes les URL sauf `/login`, `/login.jsp`,
-  `/assets/*` et redirige vers la page de connexion si aucun utilisateur n'est en session.
-- Les routes `/users*` sont réservées au rôle ADMIN (contrôle dans `AuthFilter`).
-- Les vues JSP sont placées sous `WEB-INF/views/` : inaccessible directement,
-  uniquement via `RequestDispatcher.forward()`.
-- Message flash en session après redirection (succès / erreur).
+La sécurité repose sur plusieurs niveaux :
 
-## 3. Fonctionnalités
+- Mots de passe hachés avec **PBKDF2-HMAC-SHA256**, sel aléatoire de 16 octets, 120 000 itérations. Le format stocké est `pbkdf2$iterations$salt$hash`. Les anciennes empreintes SHA-256 sont migrées automatiquement lors de la première connexion réussie.
+- Protection contre le **force brute** : après 5 échecs pour un même couple login/adresse IP, blocage de 10 minutes.
+- La session est recréée après authentification (protection contre la fixation de session), cookie `HttpOnly` + `SameSite=Lax`, expiration au bout de 30 minutes d'inactivité.
+- Un filtre (`AuthFilter`) intercepte toutes les URL sauf la page de connexion et les ressources statiques : sans session valide, direction le formulaire de login. Les routes `/users*` exigent en plus le rôle ADMIN.
+- En-têtes HTTP de sécurité posés par `CharsetFilter` : `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, et une CSP qui interdit tout script extérieur au domaine.
+- Toutes les valeurs saisies par les utilisateurs sont échappées dans les JSP avec `fn:escapeXml`.
+- Les JSP vivent sous `WEB-INF/views/`, donc inaccessibles en direct ; seuls les forwards du contrôleur y mènent.
 
-### 3.1 Authentification
+## 3. Les fonctionnalités en détail
 
-- Connexion par login/mot de passe (`POST /login`), déconnexion (`/logout`).
-- En cas d'échec : message d'erreur sur le formulaire ; en cas de succès : tableau de bord.
+### 3.1 Connexion
+
+Formulaire classique (`POST /login`). Message générique en cas d'échec, volontairement : pas besoin d'aider un attaquant à deviner si le login existe. Après succès, redirection vers le tableau de bord avec un message flash.
 
 ### 3.2 Clients
 
 | Action | Route |
 |---|---|
-| Liste + recherche (nom, prénom, téléphone, pièce) + pagination | `GET /clients` |
+| Liste, recherche (nom, prénom, téléphone, pièce), pagination | `GET /clients` |
 | Fiche détaillée avec ses comptes | `GET /clients/details?id=…` |
-| Création / modification (validation : nom, prénom, téléphone, pièce **unique**) | `POST /clients/create`, `POST /clients/update` |
+| Création / modification | `POST /clients/create`, `POST /clients/update` |
 | Activation / désactivation | `POST /clients/delete` |
-| Upload pièce d'identité *(bonus)* | `POST /clients/upload?id=…` |
+| Upload de la pièce d'identité *(bonus)* | `POST /clients/upload?id=…` |
 
-La pièce d'identité (image ou PDF, 5 Mo max) est copiée hors de la webapp
-(`~/microbank-uploads`) avec un nom non devinable (`client-<id>-piece.pdf`) ;
-le chemin est servi par un servlet dédié (`GET /documents/client/<id>`), ce qui
-évite toute exécution directe de fichier téléversé.
+La validation refuse un numéro de pièce déjà utilisé : c'est l'identifiant réel du client dans une institution de microfinance, deux personnes ne doivent jamais partager le même dossier.
+
+Pour la pièce d'identité (bonus), quelques précautions qui me tenaient à cœur :
+
+- le serveur vérifie la **signature binaire** du fichier (PDF `%PDF`, PNG ou JPEG) plutôt que le type MIME annoncé par le navigateur, qui se falsifie en une ligne de curl ;
+- taille limitée à 5 Mo ;
+- le fichier part dans un dossier hors de la webapp (`~/microbank-uploads`) sous un nom imposé par le serveur (`client-<id>-piece.pdf`), jamais celui fourni par l'utilisateur ;
+- le téléchargement passe par un servlet dédié (`GET /documents/client/<id>`) qui contrôle la session, donc pas de lien direct vers un fichier.
 
 ### 3.3 Comptes
 
@@ -62,124 +63,111 @@ le chemin est servi par un servlet dédié (`GET /documents/client/<id>`), ce qu
 |---|---|
 | Liste filtrable (recherche, type, statut, agence) + pagination | `GET /accounts` |
 | Ouverture avec dépôt initial facultatif | `POST /accounts/create` |
-| Fiche du compte : titulaire, agence, solde, dernières opérations | `GET /accounts/details?id=…` |
+| Fiche du compte | `GET /accounts/details?id=…` |
 | Blocage / clôture / réactivation | `GET /accounts/statut?id=…&statut=…` |
 
-Règles :
-- L'ouverture crée **le compte ET le dépôt initial dans une seule transaction**
-  (si le dépôt échoue, le compte n'est pas créé).
-- Numéro de compte généré automatiquement (`MB100001`, `MB100002`, …).
-- Aucun retrait ni virement n'est possible sur un compte BLOQUÉ ou CLOTURÉ.
+Points importants :
+
+- l'ouverture crée le compte **et** son dépôt initial dans la même transaction : si le dépôt échoue, le compte n'existe pas ;
+- les numéros sont générés côté serveur (MB100001, MB100002...) ;
+- sur un compte BLOQUÉ ou CLOTURÉ, aucune opération n'est acceptée.
 
 ### 3.4 Opérations
 
 | Action | Route |
 |---|---|
-| Historique global filtrable *(bonus : filtre combiné)* : type, période, agent | `GET /operations?accountId=&type=&du=&au=` |
-| Dépôt / retrait | `POST /operations/deposit|withdraw?accountId=…` |
-| Virement entre deux comptes | `POST /operations` |
+| Historique filtrable : compte, type, période, montants *(bonus)* | `GET /operations?accountId=&type=&du=&au=` |
+| Dépôt / retrait | `POST /operations/deposit|withdraw` |
+| Virement | `POST /operations` |
 
-Règles de gestion :
-1. Le montant doit être strictement positif.
-2. Un retrait exige un solde suffisant.
-3. Un virement exige deux comptes distincts, tous deux ACTIFS, et un solde suffisant.
-4. Chaque opération met à jour **les soldes et l'historique en une transaction** :
-   en cas d'erreur, tout est annulé (`rollback`) - impossible d'avoir un compte
-   débité sans crédit correspondant.
+Les règles de gestion, telles quelles :
 
-Chaque opération enregistre sa référence unique (`OP-00001`, …), son type, son montant,
-l'agent responsable et l'horodatage.
+1. montant strictement positif ;
+2. un retrait exige un solde suffisant ;
+3. un virement exige deux comptes différents, tous les deux ACTIFS, et un solde suffisant côté source ;
+4. chaque opération écrit l'historique **et** met à jour les soldes dans une seule transaction, rollback complet au moindre problème.
 
-### 3.5 Relevés de compte *(bonus 4 et 5)*
+Chaque opération porte une référence unique (OP-00001, OP-00002...), le type, le montant, l'agent responsable et l'horodatage. C'est ce qui permet de répondre à la question "qui a encaissé quoi" sans fouiller les logs.
 
-| Format | Route |
-|---|---|
-| PDF (OpenPDF) | `GET /statements/pdf?accountId=…&du=…&au=…` |
-| CSV (séparateur `;`, BOM UTF-8 pour Excel) | `GET /statements/csv?accountId=…` |
-| Version imprimable (`window.print()`, CSS `@media print`) | `GET /statements/print?accountId=…` |
+### 3.5 Relevés (bonus)
 
-Le relevé contient : identité du client, numéro et type de compte, période,
-liste des opérations signées (+/-), totaux dépôts/retraits et solde final.
+Trois sorties pour le même document :
 
-### 3.6 Tableau de bord enrichi *(bonus 2)*
+- **PDF** via OpenPDF : `GET /statements/pdf?accountId=…&du=…&au=…` ;
+- **CSV** avec séparateur `;` et BOM UTF-8, pour qu'il s'ouvre correctement dans Excel : `GET /statements/csv?accountId=…` ;
+- **version imprimable** qui appelle `window.print()` avec un CSS `@media print` : `GET /statements/print`.
 
-Statistiques temps réel : nombre de clients (par statut), comptes actifs/bloqués,
-solde total de l'institution, opérations du jour, dernières opérations.
+Le contenu est identique partout : identité du client, compte, période, opérations signées (+/-), totaux dépôts et retraits, solde final. J'ai choisi OpenPDF plutôt qu'iText simplement parce qu'iText est sous licence AGV et OpenPDF reprend la dernière version libre.
 
-### 3.7 Agences *(bonus 3)*
+### 3.6 Tableau de bord (bonus)
 
-CRUD complet (ADMIN) : code unique, nom, adresse, téléphone. Chaque compte est
-rattaché à une agence, ce qui permet le filtre par agence sur la liste des comptes.
+Ce qu'un responsable veut voir en arrivant le matin : nombre de clients, comptes actifs et bloqués, encours total, opérations du jour (dépôts et retraits), répartition courant/épargne, et les dernières écritures.
 
-### 3.8 Gestion des utilisateurs (ADMIN)
+### 3.7 Agences (bonus)
 
-Création, modification, activation/désactivation des agents et administrateurs.
-Un utilisateur désactivé ne peut plus se connecter. Suppression refusée s'il reste
-des opérations rattachées à cet utilisateur (intégrité historique).
+CRUD réservé à l'ADMIN : code unique, nom, ville. Chaque compte est rattaché à une agence, ce qui alimente le filtre par agence sur la liste des comptes.
 
-## 4. Architecture technique
+### 3.8 Utilisateurs (ADMIN)
 
-### 4.1 Structure du projet
+Création, modification, activation et désactivation des comptes utilisateurs. Un utilisateur désactivé ne peut plus se connecter, mais ses opérations passées restent intactes : la suppression directe est refusée s'il existe des opérations rattachées à lui.
+
+## 4. Vue technique
+
+### 4.1 Organisation du code
 
 ```
 src/main/java/sn/microbank/
 ├── model/        User, Client, Account, Operation, Agency + énumérations
-├── dao/          GenericDAO<T> + UserDAO, ClientDAO, AccountDAO, OperationDAO, AgencyDAO
+├── dao/          GenericDAO<T> + un DAO par entité
 ├── service/      AuthService, ClientService, AccountService, OperationService,
 │                 UserService, AgencyService, StatementService (+ StatementPdf)
 ├── controller/   9 servlets + AuthFilter + CharsetFilter
 └── util/         FormatUtil, ValidationUtil, Flash, HashUtil, ServletUtil
 ```
 
-### 4.2 Persistance
+### 4.2 Accès aux données
 
-- Un seul `EntityManagerFactory` partagé (`persistence.xml`, unité `microbankPU`).
-- `GenericDAO` centralise : `inTransaction(fn)` (commit/rollback automatique),
-  `inTransactionVoid(fn)` pour les écritures, `inRead(fn)` pour les lectures.
-- Requêtes JPQL paramétrées (**aucune concaténation** → pas d'injection SQL).
-- Pagination SQL réelle (`setFirstResult` / `setMaxResults`) + comptage séparé.
+Une seule `EntityManagerFactory`, créée une fois pour toute la vie de l'application. Le `GenericDAO` expose trois entrées :
 
-### 4.3 Vues
+- `inTransaction(fn)` : ouvre, exécute, commit, rollback en cas d'exception ;
+- `inTransactionVoid(fn)` : la même chose pour les traitements sans retour ;
+- `inRead(fn)` : lecture simple hors transaction.
 
-- Fragment communs `header.jspf` / `footer.jspf` inclus statiquement.
-- Taglibs JSTL 3.0 (`jakarta.tags.core`) et fonctions EL maison
-  (`WEB-INF/functions.tld`) : `f:fcfa()` format monétaire FCFA,
-  `f:nombre()` séparateur de milliers, `f:dateFr()` / `f:dateHeureFr()`.
-- Bootstrap 5.3 et icônes servis localement (`assets/`) : l'application fonctionne
-  hors ligne.
+Toutes les requêtes sont en JPQL paramétré, il n'y a pas une seule concaténation de chaîne dans une requête. La pagination se fait en SQL (`setFirstResult`/`setMaxResults`) avec un comptage séparé, donc pas de chargement de tables entières en mémoire.
 
-### 4.4 Flux d'une requête
+### 4.3 Les vues
+
+Un `header.jspf` et un `footer.jspf` inclus statiquement dans chaque page. Quelques fonctions EL maison déclarées dans `WEB-INF/functions.tld` : formatage monétaire FCFA, séparateurs de milliers, dates en français. Bootstrap et ses icônes sont embarqués dans `assets/`, l'application marche sans Internet.
+
+Le flux complet d'une requête :
 
 ```
-Navigateur ──► CharsetFilter ──► AuthFilter (session + rôle)
-           ──► Servlet (validation entrée)
-           ──► Service (règles métier, @transaction manuelle via GenericDAO)
-           ──► DAO (JPQL/JPA)
-           ──◄ entités / DTO
-Servlet ──forward──► WEB-INF/views/**.jsp ──► HTML
+Navigateur → CharsetFilter → AuthFilter → Servlet → Service → DAO
+                                                        ↕ MySQL
+Servlet → forward → WEB-INF/views/** → HTML renvoyé
 ```
 
 ## 5. Base de données
 
-5 tables générées par Hibernate :
+Cinq tables, générées par Hibernate :
 
-| Table | Colonnes principales |
+| Table | Contenu principal |
 |---|---|
-| `app_user` | id, login (unique), mot_de_passe (SHA-256), nom_complet, role (ADMIN/AGENT), actif |
-| `client` | id, nom, prenom, telephone, numero_piece (unique), piece_identite, statut, date_creation… |
-| `account` | id, numero_compte (unique), type (COURANT/EPARGNE), statut, solde, client_id → client, agency_id → agency |
-| `operation` | id, reference (unique), type (DEPOT/RETRAIT/VIREMENT), montant, description, date_operation, compte_id → account, compte_destination_id → account, agent_id → app_user |
-| `agency` | id, code (unique), nom, adresse, telephone |
+| `app_user` | login unique, mot_de_passe (empreinte PBKDF2), nom, rôle, statut |
+| `client` | identité, téléphone, numero_piece unique, pièce d'identité, statut |
+| `account` | numero_compte unique, type COURANT/EPARGNE, statut, solde, client, agence |
+| `operation` | référence unique, type DEPOT/RETRAIT/VIREMENT, montant, description, date, compte source, destination éventuelle, agent |
+| `agency` | code unique, nom, ville |
 
-Relations : un client possède plusieurs comptes ; un compte a plusieurs opérations ;
-une opération référence un compte source, éventuellement un compte destination et l'agent.
+Un client a plusieurs comptes, un compte a plusieurs opérations, une opération pointe vers son compte source, parfois un compte destination (virement) et toujours vers l'agent qui l'a saisie.
 
-`database.sql` fournit un jeu de données de démonstration prêt à l'emploi.
+Le fichier `database.sql` recharge un jeu de démonstration cohérent : soldes recalculés à partir des opérations, dates étalées sur plusieurs mois, accents compris.
 
-## 6. Installation
+## 6. Difficultés rencontrées
 
-Voir le [README](../README.md#démarrage-rapide) : création de la base MySQL,
-import de `database.sql`, construction Maven (`mvn clean package`),
-déploiement du WAR dans Tomcat 10.1, démarrage sur <http://localhost:8080/microbank/>.
+Quelques pièges tombés en cours de route, pour mémoire :
 
-Comptes de test : `admin/admin123` (ADMIN), `agent/agent123` (AGENT).
+- **EL 5 et les records Java** : les JSP affichaient des champs vides sur certaines pages. Cause : l'EL ne lit pas les records (pas de getter `getItems()`, juste `items()`). Remplacement par des classes classiques.
+- **LazyInitializationException** : la fiche client parcourait `client.getAccounts()` après fermeture du contexte de persistance. Associations passées en EAGER, vu le faible volume de données c'est le bon compromis.
+- **Accents cassés en base** : les imports SQL passés par le pipe PowerShell écrivaient des `?` à la place des accents. Réglé en important avec `mysql --default-character-set=utf8mb4` et en forçant l'encodage dans l'URL JDBC.
+- **Routage `/clients/*`** : `getServletPath()` ne contient pas le sous-chemin, d'où des 404 mystérieux au début. Tous les servlets concatènent désormais `getPathInfo()`.
