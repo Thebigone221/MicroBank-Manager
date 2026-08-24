@@ -1,7 +1,7 @@
 </main>
 
 <footer class="text-center text-muted py-4 small no-print">
-    MicroBank Manager - Application de gestion d'une institution de microfinance
+    MicroBank Manager - Dev Gueye Beta teste exam Java IAGE
 </footer>
 
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>

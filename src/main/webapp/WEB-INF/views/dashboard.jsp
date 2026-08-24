@@ -7,7 +7,7 @@
     <div>
         <h1 class="hero-titre"><i class="bi bi-speedometer2 me-2"></i>Tableau de bord</h1>
         <div class="hero-sous-titre">
-            Bienvenue, <strong>${sessionScope.user.nomComplet}</strong> - voici l'activité de votre institution.
+            <strong>${sessionScope.user.nomComplet}</strong> - voici l'activité de votre institution.
         </div>
     </div>
     <div class="d-flex gap-2 no-print position-relative" style="z-index:1">
@@ -52,7 +52,7 @@
     <div class="col-xl-3 col-md-6">
         <div class="card stat-card h-100">
             <div class="card-body d-flex align-items-start gap-3">
-                <span class="stat-icone icone-or"><i class="bi bi-vault"></i></span>
+                <span class="stat-icone icone-or"><i class="bi bi-safe2"></i></span>
                 <div class="flex-grow-1">
                     <div class="stat-libelle">Encours total</div>
                     <div class="stat-valeur">${f:fcfa(stats.soldeTotal)}</div>
